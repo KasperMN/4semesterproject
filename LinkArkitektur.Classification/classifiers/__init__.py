@@ -1,2 +1,0 @@
-from .deep_neural_network import DeepNeuralNetwork
-from .deep_neural_network import generate_features
