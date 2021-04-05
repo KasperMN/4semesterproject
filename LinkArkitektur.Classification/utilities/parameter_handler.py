@@ -7,10 +7,7 @@ from typing import List
 
 
 class HyperParameterHandler:
-    def __init__(self):
-        print("hi")
-
-    def find_hyperparameters_gb(self, n_estimators: List[int], learning_rate: List[int], max_depth: List[int]):
+    def find_hyperparameters_gb(model, n_estimators: List[int], learning_rate: List[int], max_depth: List[int]):
         # Listing ranges to test
         range_n_estimators = n_estimators
         range_learning_rate = learning_rate
@@ -23,9 +20,9 @@ class HyperParameterHandler:
             max_depth=range_max_depth)
 
         # Find best model
-        self.model = GridSearchCV(self.model, hyper_parameters, cv=3)
+        return GridSearchCV(model, hyper_parameters, cv=3)
 
-    def find_hyperparameters_knn(self, num_leaf_size: List[int], num_neighbors: List[int], num_p: List[int]):
+    def find_hyperparameters_knn(model, num_leaf_size: List[int], num_neighbors: List[int], num_p: List[int]):
         # Listing ranges to test
         range_leaf_size = num_leaf_size
         range_n_neighbors = num_neighbors
@@ -38,4 +35,4 @@ class HyperParameterHandler:
             p=range_p)
 
         # Find best model
-        self.model = GridSearchCV(self.model, hyper_parameters, cv=3)
+        return GridSearchCV(model, hyper_parameters, cv=3)
