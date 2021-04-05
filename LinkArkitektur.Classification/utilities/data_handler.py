@@ -5,17 +5,17 @@ from sklearn.preprocessing import LabelEncoder
 from pandas import DataFrame
 from sklearn.preprocessing import QuantileTransformer
 from sklearn.model_selection import train_test_split
+import pandas as pd
 
 
 class DataHandler:
     def __init__(self):
-        self.self = self
-        self.mapped_labels = None
+        self.mapped_labels = ''
 
     def preprocessing_data(self, features: DataFrame, target: DataFrame):
         # Split data into training and test
-        training_features, test_features, training_labels, test_labels = self.split_data(
-            features=features, target=target, target_size=0.2, state=1, should_shuffle=True, stratify=target)
+        training_features, test_features, training_labels, test_labels = train_test_split(
+            features, target, test_size=0.2, random_state=1, shuffle=True, stratify=target)
 
         # Get Category columns and Numerical columns
         categorical_cols = self.get_categorical_columns(features)
@@ -39,44 +39,32 @@ class DataHandler:
         training_features.to_csv(r'..\..\Data\training_features.csv')
         test_features.to_csv(r'..\..\Data\test_features.csv')
 
-        return training_features, test_features, training_labels, test_labels
+        # numpy.ndarry to DataFrame
+        training_labels = pd.DataFrame(data=training_labels, columns=['Assembly_Code'], index=None)
+        test_labels = pd.DataFrame(data=test_labels, columns=['Assembly_Code'], index=None)
 
-    def split_data(self,
-                   features: DataFrame,
-                   target: DataFrame,
-                   target_size: float,
-                   state: int,
-                   should_shuffle: bool,
-                   stratify) -> DataFrame:
+        # Save as csv
+        training_labels.to_csv(r'..\..\Data\training_labels.csv', index=False)
+        test_labels.to_csv(r'..\..\Data\test_labels.csv', index=False)
+        return print('Data Processed')
 
-        print("\n@SPLIT TRAINING AND TESTING DATA SETS")
-        training_features, test_features, training_labels, test_labels = train_test_split(
-            features, target, test_size=target_size, random_state=state, shuffle=should_shuffle, stratify=stratify)
-
-        print("Training Features: {0}"
-              "\nTest Features: {1}"
-              "\nTraining Labels: {2}"
-              "\nTest Labels: {3}".format(len(training_features), len(test_features),
-                                          len(training_labels), len(test_labels)))
-        return training_features, test_features, training_labels, test_labels
-
-    def get_categorical_columns(self, features):
+    @staticmethod
+    def get_categorical_columns(features):
         # Select categorical columns
-        categorical_cols = [cname for cname in features.columns
-                            if features[cname].dtype == "object"
-                            and features[cname].nunique() < 10]
-        print("\nCatagorical Columns:", categorical_cols)
-        return categorical_cols
+        return [cname for cname in features.columns
+                if features[cname].dtype == "object"
+                and features[cname].nunique() < 10]
 
-    def get_numerical_columns(self, features):
+    @staticmethod
+    def get_numerical_columns(features):
         # Select numerical columns
-        numerical_cols = [cname for cname in features.columns
-                          if features[cname].dtype
-                          in ['int64', 'float64']]
-        print("\nNumerical Columns:", numerical_cols)
-        return numerical_cols
+        return [cname for cname in features.columns
+                if features[cname].dtype
+                in ['int64', 'float64']]
 
-    def transform_cols(self, training_features: DataFrame,test_features:DataFrame, categorical_cols: list(), numerical_cols: list()):
+    @staticmethod
+    def transform_cols(training_features: DataFrame, test_features: DataFrame, categorical_cols: list(),
+                       numerical_cols: list()):
         # Label Encoder
         le = LabelEncoder()
 
@@ -107,5 +95,3 @@ class DataHandler:
         self.mapped_labels = dict(zip(enc.transform(enc.classes_), enc.classes_))
 
         return training_labels, test_labels
-
-

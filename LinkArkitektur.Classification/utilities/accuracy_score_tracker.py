@@ -22,12 +22,9 @@ class AccuracyTracker:
         self.scores = {"Accuracy": [], "Balanced Accuracy": [], "Weighted Accuracy": []}
         self.scoring = ["accuracy", "balanced_accuracy", "f1_weighted"]
 
-        # FEATURES & LABELS
         self.test_features = test_features
         self.test_labels = test_labels
-
-        # DATAFRAME SCORES
-        self.df_scores = ''
+        self.df_scores = ''  # DATAFRAME SCORES
 
         # TRY TO LOAD FILES IF EXISTING
         try:
