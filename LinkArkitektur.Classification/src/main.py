@@ -13,7 +13,7 @@ parameter_handler = utilities.HyperParameterHandler()
 
 # COLLECT THE DATA
 data, target, features = csv_handler.get_csv_data(
-    file_route="C:\\LinkArkitektur\\modified_data.csv",
+    file_route="..\\..\\Data\\modified_data.csv",
     file_separator=",",
     target_column="Assembly_Code",
     tabels_to_drop=["Type_Id", "Assembly_Code"])

@@ -14,11 +14,11 @@ pd.set_option("display.max_columns", 20)
 class AccuracyTracker:
     def __init__(self, test_features: DataFrame, test_labels: DataFrame):
         # NAMES OF TESTED CLASSIFIERS
-        self.accuracy_filename = "C:\\LinkArkitektur\\Accuracy_Scores_Library.hkl"
+        self.accuracy_filename = "..\\..\\Data\\Accuracy_Scores_Library.hkl"
         self.index = []
 
         # TYPE OF SCORING TO SAVE
-        self.names_filename = "C:\\LinkArkitektur\\Classifier_Names_Library.hkl"
+        self.names_filename = "..\\..\\Data\\Classifier_Names_Library.hkl"
         self.scores = {"Accuracy": [], "Balanced Accuracy": [], "Weighted Accuracy": []}
         self.scoring = ["accuracy", "balanced_accuracy", "f1_weighted"]
 

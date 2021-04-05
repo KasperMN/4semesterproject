@@ -36,8 +36,8 @@ class DataHandler:
                                           len(training_labels), len(test_labels)))
 
         # Save as csv
-        training_features.to_csv(r'C:\LinkArkitektur\training_features.csv')
-        test_features.to_csv(r'C:\LinkArkitektur\test_features.csv')
+        training_features.to_csv(r'..\..\Data\training_features.csv')
+        test_features.to_csv(r'..\..\Data\test_features.csv')
 
         return training_features, test_features, training_labels, test_labels
 
