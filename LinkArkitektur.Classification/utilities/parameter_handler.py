@@ -9,32 +9,22 @@ from typing import List
 
 
 class HyperParameterHandler:
-    def find_hyperparameters_gb(model, n_estimators: List[int], learning_rate: List[int], max_depth: List[int]):
-        # Listing ranges to test
-        range_n_estimators = n_estimators
-        range_learning_rate = learning_rate
-        range_max_depth = max_depth
-
+    def find_hyperparameters_gb(self, model):
         # Creating dictionary
         hyper_parameters = dict(
-            n_estimators=range_n_estimators,
-            learning_rate=range_learning_rate,
-            max_depth=range_max_depth)
+            n_estimators=[10, 50, 100],
+            learning_rate=[1, 3, 5],
+            max_depth=[1, 2, 3])
 
         # Find best model
         return GridSearchCV(model, hyper_parameters, cv=3)
 
-    def find_hyperparameters_knn(model, num_leaf_size: List[int], num_neighbors: List[int], num_p: List[int]):
-        # Listing ranges to test
-        range_leaf_size = num_leaf_size
-        range_n_neighbors = num_neighbors
-        range_p = num_p
-
+    def find_hyperparameters_knn(self, model):
         # Creating dictionary
         hyper_parameters = dict(
-            leaf_size=range_leaf_size,
-            n_neighbors=range_n_neighbors,
-            p=range_p)
+            leaf_size=[1, 5, 10],
+            n_neighbors=[1, 5, 10],
+            p=[1, 2, 3])
 
         # Find best model
         return GridSearchCV(model, hyper_parameters, cv=3)
