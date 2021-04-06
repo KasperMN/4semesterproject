@@ -1,4 +1,6 @@
 from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import RandomizedSearchCV
+import numpy as np
 from typing import List
 
 """
@@ -36,3 +38,14 @@ class HyperParameterHandler:
 
         # Find best model
         return GridSearchCV(model, hyper_parameters, cv=3)
+
+    def find_hyperparameters_rf(self, model):
+
+        hyper_parameters = dict(
+            n_estimators=[int(x) for x in np.linspace(start=200, stop=2000, num=10)],
+            max_depth=[int(x) for x in np.linspace(10, 110, num=11)],
+            min_samples_split=[2, 5, 10],
+            min_samples_leaf=[1, 2, 4]
+        )
+
+        return RandomizedSearchCV(model, hyper_parameters, n_iter=100, cv=3)
