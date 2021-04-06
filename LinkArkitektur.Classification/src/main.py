@@ -17,36 +17,34 @@ training_labels_smote = pd.read_csv(r'..\..\Data\training_labels_smote.csv')  # 
 """ @ Create models """
 knn_model = KNeighborsClassifier(leaf_size=1, n_neighbors=1, p=1)
 gb_model = GradientBoostingClassifier(learning_rate=1, max_depth=2, n_estimators=10)
-rf_model = RandomForestClassifier()
+rf_model = RandomForestClassifier(n_estimators=1000, min_samples_split=2, min_samples_leaf=1, max_depth=50)
 
 knn_model_smote = KNeighborsClassifier(leaf_size=1, n_neighbors=1, p=1)
 gb_model_smote = GradientBoostingClassifier(learning_rate=1, max_depth=3, n_estimators=10)
-rf_model_smote = RandomForestClassifier()
+rf_model_smote = RandomForestClassifier(n_estimators=200, min_samples_split=2, min_samples_leaf=
+                                        4, max_depth=110)
 """ @ Find hyperparameters """
 fhp = utilities.HyperParameterHandler()  # fhp = Find Hyper Parameters
-knn_model = fhp.find_hyperparameters_knn(model=knn_model)
-gb_model = fhp.find_hyperparameters_gb(model=gb_model)
-knn_model_smote = fhp.find_hyperparameters_knn(model= knn_model_smote)
-gb_model_smote = fhp.find_hyperparameters_gb(model= gb_model_smote)
-
+#knn_model = fhp.find_hyperparameters_knn(model=knn_model)
+#gb_model = fhp.find_hyperparameters_gb(model=gb_model)
+#knn_model_smote = fhp.find_hyperparameters_knn(model= knn_model_smote)
+#gb_model_smote = fhp.find_hyperparameters_gb(model= gb_model_smote)
+#rf_model = fhp.find_hyperparameters_rf(model=rf_model)
+#rf_model_smote = fhp.find_hyperparameters_rf(model=rf_model_smote)
 
 """ @ Train models """
-knn_model.fit(training_features, training_labels)
-gb_model.fit(training_features, training_labels)
-rf_model.fit(training_features, training_labels)
-
-knn_model_smote.fit(training_features_smote, training_labels_smote)
-gb_model_smote.fit(training_features_smote,training_labels_smote)
-rf_model_smote.fit(training_features_smote, training_labels_smote)
-
-knn_model.fit(training_features, training_labels)  # Training KNN Model
-print("Knn Model:", knn_model.best_params_)
-gb_model.fit(training_features, training_labels)  # Training GB Model
-print("Gb Model:", gb_model.best_params_)
-knn_model_smote.fit(training_features_smote, training_labels_smote)  # Training KNN SMOTE Model
-print("Knn Smote:", knn_model_smote.best_params_)
-gb_model_smote.fit(training_features_smote,training_labels_smote)  # Training GB SMOTE Model
-print("Gb Smote:", gb_model_smote.best_params_)
+#knn_model.fit(training_features, training_labels)  # Training KNN Model
+#print("Knn Model:", knn_model.best_params_)
+#gb_model.fit(training_features, training_labels)  # Training GB Model
+#print("Gb Model:", gb_model.best_params_)
+#knn_model_smote.fit(training_features_smote, training_labels_smote)  # Training KNN SMOTE Model
+#print("Knn Smote:", knn_model_smote.best_params_)
+#gb_model_smote.fit(training_features_smote,training_labels_smote)  # Training GB SMOTE Model
+#print("Gb Smote:", gb_model_smote.best_params_)
+rf_model.fit(training_features,training_labels)  # Training GB SMOTE Model
+#print("Rf model:", rf_model.best_params_)
+rf_model_smote.fit(training_features_smote,training_labels_smote)  # Training GB SMOTE Model
+#print("Rf Smote:", rf_model_smote.best_params_)
 
 """ @ Test accuracy score """
 at = utilities.AccuracyTracker(test_features=test_features, test_labels=test_labels)
