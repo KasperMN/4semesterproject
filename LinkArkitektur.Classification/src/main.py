@@ -1,21 +1,18 @@
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from imblearn.over_sampling import SMOTE
 import pandas as pd
 import warnings
 import utilities
 warnings.filterwarnings("ignore")
 
-""" @ Collect data from CSV files """
+""" @ Collect data from CSV files in GitHub Repository """
 training_features = pd.read_csv(r'..\..\Data\training_features.csv', sep=',')
 test_features = pd.read_csv(r'..\..\Data\test_features.csv', sep=',')
 training_labels = pd.read_csv(r'..\..\Data\training_labels.csv', sep=',')
 test_labels = pd.read_csv(r'..\..\Data\test_labels.csv', sep=',')
 
-""" @ Oversampled data """
-oversample = SMOTE(k_neighbors=1)
-training_features_smote, training_labels_smote = oversample.fit_resample(training_features, training_labels)
-training_features_smote.to_csv()
+training_features_smote = pd.read_csv(r'..\..\Data\training_features_smote.csv')
+training_labels_smote = pd.read_csv(r'..\..\Data\training_labels_smote.csv')
 
 """ @ Create models """
 knn_model = KNeighborsClassifier(leaf_size=1, n_neighbors=1, p=1)

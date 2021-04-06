@@ -1,6 +1,7 @@
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import QuantileTransformer
 from sklearn.preprocessing import LabelEncoder
+from imblearn.over_sampling import SMOTE
 from pandas import DataFrame
 import pandas as pd
 import warnings
@@ -37,17 +38,21 @@ class Setup:
         training_labels, test_labels = self.transform_labels(
             training_labels=training_labels, test_labels=test_labels)
 
-        ''' @@ Save as csv '''
-        training_features.to_csv(r'..\..\Data\training_features.csv')  # Saves as training_features.csv
-        test_features.to_csv(r'..\..\Data\test_features.csv')  # Saves as test_features.csv
-
-        ''' @@ numpy.ndarry to DataFrame '''
+        ''' @@ Numpy Array to DataFrame '''
         training_labels = pd.DataFrame(data=training_labels, columns=['Assembly_Code'], index=None)
         test_labels = pd.DataFrame(data=test_labels, columns=['Assembly_Code'], index=None)
 
+        """ @ Creates Oversampled Dataset from original"""
+        oversample = SMOTE(k_neighbors=1)  # Synthetic Minority Oversampling Technique
+        training_features_smote, training_labels_smote = oversample.fit_resample(training_features, training_labels)
+
         ''' @@ Save as csv '''
+        training_features.to_csv(r'..\..\Data\training_features.csv')  # Saves as training_features.csv
+        test_features.to_csv(r'..\..\Data\test_features.csv')  # Saves as test_features.csv
         training_labels.to_csv(r'..\..\Data\training_labels.csv', index=False)  # Saves as training_labels.csv
         test_labels.to_csv(r'..\..\Data\test_labels.csv', index=False)  # Saves as test_labels.csv
+        training_features_smote.to_csv(r'..\..\Data\training_features_smote.csv')  # Saves as training_features_smote.csv
+        training_labels_smote.to_csv(r'..\..\Data\training_labels_smote.csv', index=False)  # Saves as training_labels_smote.csv
 
         self.print_data(
             training_features=training_features,
