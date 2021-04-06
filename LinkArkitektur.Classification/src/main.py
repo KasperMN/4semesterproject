@@ -25,11 +25,13 @@ gb_model_smote = GradientBoostingClassifier(learning_rate=2, max_depth=3, n_esti
 rf_model_smote = RandomForestClassifier()
 
 ''' @ Find Hyper Parameters for models '''
+'''
 fhp = utilities.HyperParameterHandler()  # fhp = Find Hyper Parameters
 knn_model = fhp.find_hyperparameters_knn(model=knn_model)  # Returns GridSearchCV Object
 gb_model = fhp.find_hyperparameters_gb(model=gb_model)  # Returns GridSearchCV Object
 knn_model_smote = fhp.find_hyperparameters_knn(model= knn_model_smote)  # Returns GridSearchCV Object
 gb_model_smote = fhp.find_hyperparameters_gb(model= gb_model_smote)  # Returns GridSearchCV Object
+'''
 
 ''' @ Train models '''
 knn_model.fit(training_features, training_labels)  # Training KNN Model
@@ -38,10 +40,12 @@ knn_model_smote.fit(training_features_smote, training_labels_smote)  # Training 
 gb_model_smote.fit(training_features_smote,training_labels_smote)  # Training GB SMOTE Model
 
 ''' @ Print Best Parameters '''
+'''
 print("Knn Model:", knn_model.best_params_)
 print("Gb Model:", gb_model.best_params_)
 print("Knn Smote:", knn_model_smote.best_params_)
 print("Gb Smote:", gb_model_smote.best_params_)
+'''
 
 ''' @ Test accuracy score '''
 at = utilities.AccuracyTracker(test_features=test_features, test_labels=test_labels)
