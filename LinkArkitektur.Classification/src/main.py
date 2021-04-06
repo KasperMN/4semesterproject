@@ -19,13 +19,14 @@ training_labels_smote = pd.read_csv(r'..\..\Data\training_labels_smote.csv')  # 
 ''' @ Create Original Models '''
 knn_model = KNeighborsClassifier(leaf_size=1, n_neighbors=1, p=1)
 gb_model = GradientBoostingClassifier(learning_rate=1, max_depth=3, n_estimators=1)
-rf_model = RandomForestClassifier()
+rf_model = RandomForestClassifier(n_estimators=1000, min_samples_split=2, min_samples_leaf=1, max_depth=50)
 nb_model = MultinomialNB()
 
 ''' @ Create SMOTE Models'''
 knn_model_smote = KNeighborsClassifier(leaf_size=1, n_neighbors=10, p=1)
 gb_model_smote = GradientBoostingClassifier(learning_rate=2, max_depth=3, n_estimators=1)
-rf_model_smote = RandomForestClassifier()
+rf_model_smote = RandomForestClassifier(n_estimators=200, min_samples_split=2, min_samples_leaf=
+                                        4, max_depth=110)
 nb_model_smote = MultinomialNB()
 
 ''' @ Find Hyper Parameters for models '''
@@ -35,17 +36,21 @@ knn_model = fhp.find_hyperparameters_knn(model=knn_model)  # Returns GridSearchC
 gb_model = fhp.find_hyperparameters_gb(model=gb_model)  # Returns GridSearchCV Object
 knn_model_smote = fhp.find_hyperparameters_knn(model= knn_model_smote)  # Returns GridSearchCV Object
 gb_model_smote = fhp.find_hyperparameters_gb(model= gb_model_smote)  # Returns GridSearchCV Object
+rf_model = fhp.find_hyperparameters_rf(model=rf_model)
+rf_model_smote = fhp.find_hyperparameters_rf(model=rf_model_smote)
 '''
 
 ''' @ Train Original Models '''
 knn_model.fit(training_features, training_labels)  # Training KNN Model
 gb_model.fit(training_features, training_labels)  # Training GB Model
 nb_model.fit(training_features, training_labels)  # Training NB Model
+rf_model.fit(training_features,training_labels)  # Training GB SMOTE Model
 
 ''' @ Train SMOTE Models '''
 knn_model_smote.fit(training_features_smote, training_labels_smote)  # Training KNN SMOTE Model
 gb_model_smote.fit(training_features_smote,training_labels_smote)  # Training GB SMOTE Model
 nb_model_smote.fit(training_features_smote, training_labels_smote)  # Training NB SMOTE Model
+rf_model_smote.fit(training_features_smote,training_labels_smote)  # Training GB SMOTE Model
 
 ''' @ Print Best Parameters '''
 '''
@@ -53,6 +58,8 @@ print("Knn Model:", knn_model.best_params_)
 print("Gb Model:", gb_model.best_params_)
 print("Knn Smote:", knn_model_smote.best_params_)
 print("Gb Smote:", gb_model_smote.best_params_)
+print("Rf model:", rf_model.best_params_)
+#print("Rf Smote:", rf_model_smote.best_params_)
 '''
 
 ''' @ Test accuracy score '''
