@@ -26,34 +26,39 @@ class Setup:
             features, target, test_size=0.2, random_state=1, shuffle=True, stratify=target)
 
         ''' @@ Get Category columns and Numerical columns '''
-        categorical_cols = self.get_categorical_columns(features)
-        numerical_cols = self.get_numerical_columns(features)
+        categorical_cols = self.get_categorical_columns(features)  # Names of string columns
+        numerical_cols = self.get_numerical_columns(features)  # Names of numerical columns
 
-        ''' @@ Transform Columns '''
-        training_features, test_features = self.transform_cols(training_features, test_features, categorical_cols, numerical_cols)
+        ''' @@ Transform training_features & test_features '''
+        training_features, test_features = self.transform_cols(
+            training_features, test_features, categorical_cols, numerical_cols)
 
         ''' @@ Categorize Labels '''
-        training_labels, test_labels = self.transform_labels(training_labels=training_labels, test_labels=test_labels)
+        training_labels, test_labels = self.transform_labels(
+            training_labels=training_labels, test_labels=test_labels)
 
         ''' @@ Save as csv '''
-        training_features.to_csv(r'..\..\Data\training_features.csv')
-        test_features.to_csv(r'..\..\Data\test_features.csv')
+        training_features.to_csv(r'..\..\Data\training_features.csv')  # Saves as training_features.csv
+        test_features.to_csv(r'..\..\Data\test_features.csv')  # Saves as test_features.csv
 
         ''' @@ numpy.ndarry to DataFrame '''
         training_labels = pd.DataFrame(data=training_labels, columns=['Assembly_Code'], index=None)
         test_labels = pd.DataFrame(data=test_labels, columns=['Assembly_Code'], index=None)
 
         ''' @@ Save as csv '''
-        training_labels.to_csv(r'..\..\Data\training_labels.csv', index=False)
-        test_labels.to_csv(r'..\..\Data\test_labels.csv', index=False)
+        training_labels.to_csv(r'..\..\Data\training_labels.csv', index=False)  # Saves as training_labels.csv
+        test_labels.to_csv(r'..\..\Data\test_labels.csv', index=False)  # Saves as test_labels.csv
 
-        self.print_data(training_features, test_features, training_labels, test_labels)
+        self.print_data(
+            training_features=training_features,
+            test_features=test_features,
+            training_labels=training_labels,
+            test_labels=test_labels)
 
-
-    def print_data(self, training_features: DataFrame, test_features: DataFrame,
+    @staticmethod
+    def print_data(training_features: DataFrame, test_features: DataFrame,
                    training_labels: DataFrame, test_labels: DataFrame):
-        # Display size of data
-        print("\nTraining Features: {0}"
+        print("\nTraining Features: {0}"  # Display number of rows
               "\nTest Features: {1}"
               "\nTraining Labels: {2}"
               "\nTest Labels: {3}".format(len(training_features), len(test_features),
@@ -61,37 +66,33 @@ class Setup:
 
     @staticmethod
     def get_categorical_columns(features):
-        # Select categorical columns
-        return [cname for cname in features.columns
+        return [cname for cname in features.columns  # Select categorical columns
                 if features[cname].dtype == "object"
                 and features[cname].nunique() < 10]
 
     @staticmethod
     def get_numerical_columns(features):
-        # Select numerical columns
-        return [cname for cname in features.columns
+        return [cname for cname in features.columns  # Select numerical columns
                 if features[cname].dtype
                 in ['int64', 'float64']]
 
     @staticmethod
     def transform_cols(training_features: DataFrame, test_features: DataFrame, categorical_cols: list(),
                        numerical_cols: list()):
-        # Label Encoder
-        le = LabelEncoder()
 
-        # QuantileTransformer
-        qt = QuantileTransformer(n_quantiles=200, random_state=2)
+        le = LabelEncoder()  # Label Encoder
+        qt = QuantileTransformer(n_quantiles=200, random_state=2)  # QuantileTransformer
 
-        # Transform 'object' columns to int columns (categorical columns)
+        ''' Transform 'object' columns to int columns (categorical columns) '''
         training_features.loc[:, categorical_cols] = le.fit_transform(
             training_features.loc[:, categorical_cols].values.ravel())
         test_features.loc[:, categorical_cols] = le.transform(test_features.loc[:, categorical_cols].values.ravel())
 
-        # Transform numerical columns to values between 0 and 1
+        ''' Transform numerical columns to values between 0 and 1 '''
         training_features.loc[:, numerical_cols] = qt.fit_transform(training_features.loc[:, numerical_cols])
         test_features.loc[:, numerical_cols] = qt.transform(test_features.loc[:, numerical_cols])
 
-        # Keep selected columns
+        ''' Keep selected columns '''
         my_cols = categorical_cols + numerical_cols
         training_features = training_features[my_cols].copy()
         test_features = test_features[my_cols].copy()
@@ -99,11 +100,10 @@ class Setup:
         return training_features, test_features
 
     def transform_labels(self, training_labels, test_labels):
-        # Label Encoder
-        enc = LabelEncoder()
+        enc = LabelEncoder()  # Label Encoder
         training_labels = enc.fit_transform(training_labels)
         test_labels = enc.transform(test_labels)
-        self.mapped_labels = dict(zip(enc.transform(enc.classes_), enc.classes_))
+        #self.mapped_labels = dict(zip(enc.transform(enc.classes_), enc.classes_))
 
         return training_labels, test_labels
 
