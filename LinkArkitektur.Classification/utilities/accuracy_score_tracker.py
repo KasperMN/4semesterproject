@@ -24,7 +24,10 @@ class AccuracyTracker:
 
     def save_best_model(self):
         hkl.dump(self.best_classifier, "..\\..\\Data\\Best_Classifier.hkl")
-        print("Best Classifier: ", self.best_classifier.get('classifier'))
+        print("\nBest Classifier: ", self.best_classifier.get('classifier'))
+        print("Accuracy:", self.best_classifier.get('accuracy'))
+        print("Balanced Accuracy:", self.best_classifier.get('balanced_accuracy'))
+        print("Weighted Accuracy:", self.best_classifier.get('f1_weighted'))
 
     def add_score(self, name, classifier):
         cv_result = cross_validate(classifier, X=self.test_features, y=self.test_labels, scoring=self.scoring)
@@ -39,11 +42,15 @@ class AccuracyTracker:
 
         if self.best_score < score:
             self.best_score = score
-            self.best_classifier = dict(name=name, classifier=classifier)
+            self.best_classifier = dict(
+                name=name,
+                classifier=classifier,
+                accuracy=cv_result["test_accuracy"].mean(),
+                balanced_accuracy=cv_result["test_balanced_accuracy"].mean(),
+                f1_weighted=cv_result["test_f1_weighted"].mean())
 
     def display_scores(self):
-        print("\n")
-        print("\n@@ Accuracy Scores @@")
+        print("@@ Accuracy Scores @@")
         # PRINT RESULT
         print(self.df_scores)
 
