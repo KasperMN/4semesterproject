@@ -1,7 +1,9 @@
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.naive_bayes import MultinomialNB
 import pandas as pd
+import hickle as hkl
 import warnings
 import utilities
 warnings.filterwarnings("ignore")
@@ -18,11 +20,13 @@ training_labels_smote = pd.read_csv(r'..\..\Data\training_labels_smote.csv')  # 
 knn_model = KNeighborsClassifier(leaf_size=1, n_neighbors=1, p=1)
 gb_model = GradientBoostingClassifier(learning_rate=1, max_depth=3, n_estimators=1)
 rf_model = RandomForestClassifier()
+nb_model = MultinomialNB()
 
 ''' @ Create SMOTE Models'''
 knn_model_smote = KNeighborsClassifier(leaf_size=1, n_neighbors=10, p=1)
 gb_model_smote = GradientBoostingClassifier(learning_rate=2, max_depth=3, n_estimators=1)
 rf_model_smote = RandomForestClassifier()
+nb_model_smote = MultinomialNB()
 
 ''' @ Find Hyper Parameters for models '''
 '''
@@ -33,11 +37,15 @@ knn_model_smote = fhp.find_hyperparameters_knn(model= knn_model_smote)  # Return
 gb_model_smote = fhp.find_hyperparameters_gb(model= gb_model_smote)  # Returns GridSearchCV Object
 '''
 
-''' @ Train models '''
+''' @ Train Original Models '''
 knn_model.fit(training_features, training_labels)  # Training KNN Model
 gb_model.fit(training_features, training_labels)  # Training GB Model
+nb_model.fit(training_features, training_labels)  # Training NB Model
+
+''' @ Train SMOTE Models '''
 knn_model_smote.fit(training_features_smote, training_labels_smote)  # Training KNN SMOTE Model
 gb_model_smote.fit(training_features_smote,training_labels_smote)  # Training GB SMOTE Model
+nb_model_smote.fit(training_features_smote, training_labels_smote)  # Training NB SMOTE Model
 
 ''' @ Print Best Parameters '''
 '''
@@ -49,12 +57,17 @@ print("Gb Smote:", gb_model_smote.best_params_)
 
 ''' @ Test accuracy score '''
 at = utilities.AccuracyTracker(test_features=test_features, test_labels=test_labels)
-at.add_score(name='KNeighbors Classifier - Original', classifier=knn_model)
-at.add_score(name='KNeighbors Classifier - Oversampled', classifier=knn_model_smote)
-at.add_score(name='GradientBoosting Classifier - Original', classifier=gb_model)
-at.add_score(name='GradientBoosting Classifier Oversampled', classifier=gb_model_smote)
-at.add_score(name='RandomForestClassifier - Original', classifier=rf_model)
-at.add_score(name='RandomForestClassifier - Oversampled', classifier=rf_model_smote)
+at.add_score(name='KNeighbors - Original', classifier=knn_model)
+at.add_score(name='KNeighbors - Oversampled', classifier=knn_model_smote)
+at.add_score(name='GradientBoosting - Original', classifier=gb_model)
+at.add_score(name='GradientBoosting Oversampled', classifier=gb_model_smote)
+at.add_score(name='RandomForest - Original', classifier=rf_model)
+at.add_score(name='RandomForest - Oversampled', classifier=rf_model_smote)
+at.add_score(name='NaiveBayes - Original', classifier=nb_model)
+at.add_score(name='NaiveBayes - Oversampled', classifier=nb_model_smote)
 
 ''' @ Display scores '''
 at.display_scores()
+
+''' @ Save Best Model '''
+at.save_best_model()
