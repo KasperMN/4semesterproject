@@ -25,16 +25,16 @@ class AccuracyTracker:
     def save_best_model(self):
         hkl.dump(self.best_classifier, "..\\..\\Data\\Best_Classifier.hkl")
         print("\nBest Classifier: ", self.best_classifier.get('classifier'))
-        print("Accuracy:", self.best_classifier.get('accuracy'))
-        print("Balanced Accuracy:", self.best_classifier.get('balanced_accuracy'))
-        print("Weighted Accuracy:", self.best_classifier.get('f1_weighted'))
+        print("Accuracy: {0:.2f} %".format(self.best_classifier.get('accuracy') * 100))
+        print("Balanced Accuracy: {0:.2f} %".format(self.best_classifier.get('balanced_accuracy') * 100))
+        print("Weighted Accuracy: {0:.2f} %".format(self.best_classifier.get('f1_weighted') * 100))
 
     def add_score(self, name, classifier):
         cv_result = cross_validate(classifier, X=self.test_features, y=self.test_labels, scoring=self.scoring)
         self.index.append(name)
-        self.scores["Accuracy"].append(cv_result["test_accuracy"].mean())
-        self.scores["Balanced Accuracy"].append(cv_result["test_balanced_accuracy"].mean())
-        self.scores["Weighted Accuracy"].append(cv_result["test_f1_weighted"].mean())
+        self.scores["Accuracy"].append("{0:.2f} %".format(cv_result["test_accuracy"].mean() * 100))
+        self.scores["Balanced Accuracy"].append("{0:.2f} %".format(cv_result["test_balanced_accuracy"].mean() * 100))
+        self.scores["Weighted Accuracy"].append("{0:.2f} %".format(cv_result["test_f1_weighted"].mean() * 100))
         self.df_scores = pd.DataFrame(self.scores, index=self.index)  # CREATE DATAFRAME
         score = cv_result["test_accuracy"].mean() + \
                 cv_result["test_balanced_accuracy"].mean() + \
