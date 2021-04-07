@@ -43,14 +43,14 @@ rf_model_smote = fhp.find_hyperparameters_rf(model=rf_model_smote)
 ''' @ Train Original Models '''
 knn_model.fit(training_features, training_labels)  # Training KNN Model
 gb_model.fit(training_features, training_labels)  # Training GB Model
-nb_model.fit(training_features, training_labels)  # Training NB Model
 rf_model.fit(training_features,training_labels)  # Training GB SMOTE Model
+nb_model.fit(training_features, training_labels)  # Training NB Model
 
 ''' @ Train SMOTE Models '''
 knn_model_smote.fit(training_features_smote, training_labels_smote)  # Training KNN SMOTE Model
 gb_model_smote.fit(training_features_smote,training_labels_smote)  # Training GB SMOTE Model
-nb_model_smote.fit(training_features_smote, training_labels_smote)  # Training NB SMOTE Model
 rf_model_smote.fit(training_features_smote,training_labels_smote)  # Training GB SMOTE Model
+nb_model_smote.fit(training_features_smote, training_labels_smote)  # Training NB SMOTE Model
 
 ''' @ Print Best Parameters '''
 '''
