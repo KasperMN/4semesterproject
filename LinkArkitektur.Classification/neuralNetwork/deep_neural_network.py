@@ -10,16 +10,14 @@ from pandas import DataFrame
 @tf.autograph.experimental.do_not_convert
 class DeepNeuralNetwork:
     def __init__(self,
-                 name: str,
-                 features,
+                 features: DataFrame,
                  hidden_layers: list,
                  output_number: int,
                  activation_func: str,
                  optimizer: str,
                  training_features: DataFrame,
-                 training_labels: DataFrame) -> DNNClassifier:
+                 training_labels: DataFrame):
 
-        self.name = name
         self.features = features
         self.hidden_layers = hidden_layers
         self.output_number = output_number
@@ -27,16 +25,16 @@ class DeepNeuralNetwork:
         self.optimizer = optimizer
         self.training_features = training_features
         self.training_labels = training_labels
-        self.classifier = ''
+        self.classifier = None
 
     def create_network(self):
-        network = DNNClassifier(feature_columns=self.features,
-                                hidden_units=self.hidden_layers,
-                                activation_fn=self.activation_func,
-                                optimizer=self.optimizer,
-                                n_classes=self.output_number,
-                                )
-        self.classifier = network
+        self.classifier = DNNClassifier(feature_columns=self.features,
+                                        hidden_units=self.hidden_layers,
+                                        activation_fn=self.activation_func,
+                                        optimizer=self.optimizer,
+                                        n_classes=self.output_number,
+                                        )
+
         return self.classifier
 
     def input_func(self, features: DataFrame,
@@ -51,19 +49,19 @@ class DeepNeuralNetwork:
 
     def predict_input_func(self,
                            test_features: DataFrame,
-                           batch_size: int,):
+                           batch_size: int, ):
         # Convert the inputs to a Dataset without labels.
         predictions = tf.data.Dataset.from_tensor_slices(dict(test_features)).batch(batch_size)
         return predictions
 
-    def train(self, batch_size: int, training_steps: int) -> DNNClassifier:
+    def train_clf(self, batch_size: int, training_steps: int) -> DNNClassifier:
         import logging
         logging.getLogger().setLevel(logging.INFO)
         self.classifier = self.classifier.train(
             input_fn=lambda: self.input_func(self.training_features,
                                              self.training_labels,
                                              training=True,
-                                             batch_size=batch_size,), steps=training_steps)
+                                             batch_size=batch_size), steps=training_steps)
 
         return self.classifier
 
@@ -75,7 +73,7 @@ class DeepNeuralNetwork:
                 mapped_labels.get(class_id), 100 * probability))
 
 
-def generate_features(self, feature_set):
+def generate_features(feature_set):
     my_feature_columns = []
     for key in feature_set.keys():
         my_feature_columns.append(tf.feature_column.numeric_column(key=key))

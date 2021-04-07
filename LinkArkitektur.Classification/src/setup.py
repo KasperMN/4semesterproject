@@ -47,11 +47,11 @@ class Setup:
         training_features_smote, training_labels_smote = oversample.fit_resample(training_features, training_labels)
 
         ''' @@ Save as csv '''
-        training_features.to_csv(r'..\..\Data\training_features.csv')  # Saves as training_features.csv
-        test_features.to_csv(r'..\..\Data\test_features.csv')  # Saves as test_features.csv
+        training_features.to_csv(r'..\..\Data\training_features.csv', index=False)  # Saves as training_features.csv
+        test_features.to_csv(r'..\..\Data\test_features.csv', index=False)  # Saves as test_features.csv
         training_labels.to_csv(r'..\..\Data\training_labels.csv', index=False)  # Saves as training_labels.csv
         test_labels.to_csv(r'..\..\Data\test_labels.csv', index=False)  # Saves as test_labels.csv
-        training_features_smote.to_csv(r'..\..\Data\training_features_smote.csv')  # Saves as training_features_smote.csv
+        training_features_smote.to_csv(r'..\..\Data\training_features_smote.csv', index=False)  # Saves as training_features_smote.csv
         training_labels_smote.to_csv(r'..\..\Data\training_labels_smote.csv', index=False)  # Saves as training_labels_smote.csv
 
         self.print_data(
@@ -72,7 +72,7 @@ class Setup:
     @staticmethod
     def get_categorical_columns(features):
         return [cname for cname in features.columns  # Select categorical columns
-                if features[cname].dtype == "object"
+                if features[cname].dtype is "object"
                 and features[cname].nunique() < 10]
 
     @staticmethod

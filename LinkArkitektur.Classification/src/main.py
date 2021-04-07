@@ -76,5 +76,3 @@ at.add_score(name='NaiveBayes - Oversampled', classifier=nb_model_smote)
 ''' @ Display scores '''
 at.display_scores()
 
-''' @ Save Best Model '''
-at.save_best_model()
