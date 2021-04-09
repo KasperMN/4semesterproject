@@ -13,9 +13,9 @@ class ApiConnection:
         self.content = json.dumps(self.JSONContent, indent=4, sort_keys=True)
         self.df = pd.read_json(self.content)
         self.index = {'_id': []}
-        self.values = {'Assembly_Code': [], 'Area': [], 'Structural': [], 'Volume': [], 'Base Constraint': []}
+        self.values = {'Assembly_Code': [], 'Area': [], 'Structural': [], 'Volume': [], 'Base_Constraint': [], 'Project_id': []}
 
-    def connect_database(self):
+    def collect_link_data(self):
         for i, _ in enumerate(self.df['resources']):
             wall_id = (self.df['resources'][i]['_id'])  # Specific wall id's
             parameters = (self.df['resources'][i]['properties']['parameters'])  # Regular parameters for the wall
@@ -27,6 +27,7 @@ class ApiConnection:
             self.values['Area'].append(parameters['Area'])  # Area in Cubic Meters
             self.values['Structural'].append(parameters['Structural'])  # Boolean value for structural use
             self.values['Volume'].append(parameters['Volume'])  # The volume of the Wall
-            self.values['Base Constraint'].append(parameters['Base Constraint'])
+            self.values['Base_Constraint'].append(parameters['Base Constraint'])
+            self.values['Project_id'].append(1) # SKEJBY hospital project
 
         return pd.DataFrame(data=self.values, index=self.index['_id'])  # Values as columns, index as indexes
