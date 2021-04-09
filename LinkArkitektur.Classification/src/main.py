@@ -63,15 +63,15 @@ print("Rf model:", rf_model.best_params_)
 '''
 
 ''' @ Test accuracy score '''
-at = utilities.AccuracyTracker(test_features=test_features, test_labels=test_labels)
-at.add_score(name='KNeighbors - Original', classifier=knn_model)
-at.add_score(name='KNeighbors - Oversampled', classifier=knn_model_smote)
-at.add_score(name='GradientBoosting - Original', classifier=gb_model)
-at.add_score(name='GradientBoosting Oversampled', classifier=gb_model_smote)
-at.add_score(name='RandomForest - Original', classifier=rf_model)
-at.add_score(name='RandomForest - Oversampled', classifier=rf_model_smote)
-at.add_score(name='NaiveBayes - Original', classifier=nb_model)
-at.add_score(name='NaiveBayes - Oversampled', classifier=nb_model_smote)
+at = utilities.AccuracyTracker(test_features=test_features, test_labels=test_labels)  # Instance to handle accuracy
+at.add_score(name='KNeighbors - Original', classifier=knn_model)  # Testing: KNeighbors - Original
+at.add_score(name='KNeighbors - Oversampled', classifier=knn_model_smote)  # Testing: KNeighbors - Oversampled
+at.add_score(name='GradientBoosting - Original', classifier=gb_model)  # Testing: GradientBoosting - Original
+at.add_score(name='GradientBoosting Oversampled', classifier=gb_model_smote)  # Testing: GradientBoosting Oversampled
+at.add_score(name='RandomForest - Original', classifier=rf_model)  # Testing: RandomForest - Original
+at.add_score(name='RandomForest - Oversampled', classifier=rf_model_smote)  # Testing: RandomForest - Oversampled
+at.add_score(name='NaiveBayes - Original', classifier=nb_model)  # Testing: NaiveBayes - Original
+at.add_score(name='NaiveBayes - Oversampled', classifier=nb_model_smote)  # Testing: NaiveBayes - Oversampled
 
 ''' @ Display scores '''
 at.display_scores()

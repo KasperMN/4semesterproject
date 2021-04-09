@@ -5,6 +5,9 @@ from imblearn.over_sampling import SMOTE
 from pandas import DataFrame
 import pandas as pd
 import warnings
+
+from typing import List
+
 warnings.filterwarnings("ignore")
 
 
@@ -54,7 +57,7 @@ class Setup:
         training_features_smote.to_csv(r'..\..\Data\training_features_smote.csv', index=False)  # Saves as training_features_smote.csv
         training_labels_smote.to_csv(r'..\..\Data\training_labels_smote.csv', index=False)  # Saves as training_labels_smote.csv
 
-        self.print_data(
+        self.print_data(  # Prints number of elements in each DataFrame
             training_features=training_features,
             test_features=test_features,
             training_labels=training_labels,
@@ -72,32 +75,32 @@ class Setup:
     @staticmethod
     def get_categorical_columns(features):
         return [cname for cname in features.columns  # Select categorical columns
-                if features[cname].dtype is "object"
-                and features[cname].nunique() < 10]
+                if features[cname].dtype is "object"  # IF the type is of object (string)
+                and features[cname].nunique() < 10]  # And has less than 10 unique features
 
     @staticmethod
     def get_numerical_columns(features):
         return [cname for cname in features.columns  # Select numerical columns
-                if features[cname].dtype
+                if features[cname].dtype  # If the type is in the list with int and float
                 in ['int64', 'float64']]
 
     @staticmethod
-    def transform_cols(training_features: DataFrame, test_features: DataFrame, categorical_cols: list(),
-                       numerical_cols: list()):
+    def transform_cols(training_features: DataFrame, test_features: DataFrame, categorical_cols: List[str],
+                       numerical_cols: List[str]):
 
         le = LabelEncoder()  # Label Encoder
         qt = QuantileTransformer(n_quantiles=200, random_state=2)  # QuantileTransformer
 
-        ''' Transform 'object' columns to int columns (categorical columns) '''
+        ''' @ Transform 'object' columns to int columns (categorical columns) '''
         training_features.loc[:, categorical_cols] = le.fit_transform(
             training_features.loc[:, categorical_cols].values.ravel())
         test_features.loc[:, categorical_cols] = le.transform(test_features.loc[:, categorical_cols].values.ravel())
 
-        ''' Transform numerical columns to values between 0 and 1 '''
+        ''' @ Transform numerical columns to values between 0 and 1 '''
         training_features.loc[:, numerical_cols] = qt.fit_transform(training_features.loc[:, numerical_cols])
         test_features.loc[:, numerical_cols] = qt.transform(test_features.loc[:, numerical_cols])
 
-        ''' Keep selected columns '''
+        ''' @ Keep selected columns '''
         my_cols = categorical_cols + numerical_cols
         training_features = training_features[my_cols].copy()
         test_features = test_features[my_cols].copy()
