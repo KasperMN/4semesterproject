@@ -39,3 +39,8 @@ class AccuracyTracker:
         self.df_scores = pd.DataFrame(self.scores, index=self.index)  # CREATE DATAFRAME
         self.df_scores = self.df_scores.sort_values(by=['total_accuracy'], ascending=False)
         print("@@ Accuracy Scores @@ \n {}".format(self.df_scores))
+
+    def get_score(self):
+        self.df_scores = pd.DataFrame(self.scores, index=self.index)  # CREATE DATAFRAME
+        self.df_scores = self.df_scores.sort_values(by=['total_accuracy'], ascending=False)
+        return self.df_scores

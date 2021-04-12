@@ -1,5 +1,4 @@
 import sqlite3
-import pandas as pd
 import database.connection
 
 
@@ -60,4 +59,6 @@ class DBHandler:
         PRAGMA foreign_keys=on;"""
         self.cursor.executescript(sql)
 
-DBHandler()
+
+if __name__ == "__main__":
+    database = DBHandler()

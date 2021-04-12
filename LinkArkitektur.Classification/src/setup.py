@@ -18,7 +18,7 @@ class Setup:
 
         ''' @@ Remove Duplicates From Data '''
         print('Shape of Data: {}'.format(self.data.shape[0]))  # Prints num rows
-        self.data.drop_duplicates(inplace=True) # Drops duplicate rows
+        self.data.drop_duplicates(inplace=True)  # Drops duplicate rows
         print('Shape of Data after dropping duplicates: {}'.format(self.data.shape[0]))  # Prints num rows
 
         ''' @@ Specify target and features '''
@@ -54,8 +54,10 @@ class Setup:
         test_features.to_csv(r'..\..\Data\test_features.csv', index=False)  # Saves as test_features.csv
         training_labels.to_csv(r'..\..\Data\training_labels.csv', index=False)  # Saves as training_labels.csv
         test_labels.to_csv(r'..\..\Data\test_labels.csv', index=False)  # Saves as test_labels.csv
-        training_features_smote.to_csv(r'..\..\Data\training_features_smote.csv', index=False)  # Saves as training_features_smote.csv
-        training_labels_smote.to_csv(r'..\..\Data\training_labels_smote.csv', index=False)  # Saves as training_labels_smote.csv
+        training_features_smote.to_csv(r'..\..\Data\training_features_smote.csv',
+                                       index=False)  # Saves as training_features_smote.csv
+        training_labels_smote.to_csv(r'..\..\Data\training_labels_smote.csv',
+                                     index=False)  # Saves as training_labels_smote.csv
 
         self.print_data(  # Prints number of elements in each DataFrame
             training_features=training_features,
@@ -75,7 +77,7 @@ class Setup:
     @staticmethod
     def get_categorical_columns(features):
         return [cname for cname in features.columns  # Select categorical columns
-                if features[cname].dtype is "object"  # IF the type is of object (string)
+                if features[cname].dtype == "object"  # IF the type is of object (string)
                 and features[cname].nunique() < 10]  # And has less than 10 unique features
 
     @staticmethod
@@ -87,7 +89,6 @@ class Setup:
     @staticmethod
     def transform_cols(training_features: DataFrame, test_features: DataFrame, categorical_cols: List[str],
                        numerical_cols: List[str]):
-
         le = LabelEncoder()  # Label Encoder
         qt = QuantileTransformer(n_quantiles=200, random_state=2)  # QuantileTransformer
 
@@ -111,9 +112,11 @@ class Setup:
         enc = LabelEncoder()  # Label Encoder
         training_labels = enc.fit_transform(training_labels)
         test_labels = enc.transform(test_labels)
-        #self.mapped_labels = dict(zip(enc.transform(enc.classes_), enc.classes_))
+        # self.mapped_labels = dict(zip(enc.transform(enc.classes_), enc.classes_))
 
         return training_labels, test_labels
 
 
-setup = Setup()  # Creates instance to run setup class
+if __name__ == '__main__':  # When running for testing
+    setup_ = Setup()
+    print(setup_.data)
