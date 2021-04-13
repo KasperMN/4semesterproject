@@ -4,12 +4,15 @@ import requests
 from DataCollector import DataCollector
 from flask import request
 import DataBase
+import MachineLearning
+
 app = Flask(__name__)
 api = Api(app)
 
 
 def start_api():
     app.run()  # Initialize the api server
+
 
 @app.route('/data/<path:url>', methods=['GET'])
 def getkeys(url):
@@ -23,24 +26,18 @@ def post():
     url = request.json["url"]
     keys = request.json["keys"]
     target = request.json["target"]
+    table_name = request.json["table_name"]
 
-    print(url)
-    print(keys)
-    print(target)
-
-    dc = DataCollector(keys=keys, url=url)
-    error_messages, data = dc.collect_columns_from_keys(nested_dictionary=dc.response)
+    data_collector = DataCollector(keys=keys, url=url)
+    error_messages, data = data_collector.collect_columns_from_keys(nested_dictionary=data_collector.nested_data)
 
     if not error_messages:  # If all went okay
-        db = DataBase.DbConnection(data=data)  # Initialize Database with found data from keys
-        # Preprocess the data
-        return "All gode", 200  # Testing
-
+        db = DataBase.DbConnection(data=data, table_name=table_name)  # Initialize Database with found data from keys
+        prep = MachineLearning.PreProcessing(columns=keys, table_name=table_name)  # Preprocess the data
+        prep.returns_processed_test_and_training_data(target=target)
+        return "DataBase Created, Preprocessing started...", 200  # Testing
     if error_messages:
         return error_messages, 400
-
-
-
 
 
 def flatten_json(y):  # Magical flattening method

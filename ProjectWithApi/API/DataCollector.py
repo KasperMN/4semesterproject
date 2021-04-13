@@ -1,6 +1,4 @@
 import json
-import sys
-
 import pandas as pd
 import requests
 
@@ -8,7 +6,7 @@ import requests
 class DataCollector:
     def __init__(self, keys: dict, url):
         self.keys = keys
-        self.response = requests.get(url, verify=False).json()
+        self.nested_data = requests.get(url, verify=False).json()
 
     def collect_columns_from_keys(self, nested_dictionary):
         df = pd.DataFrame()
