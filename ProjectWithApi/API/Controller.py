@@ -1,13 +1,14 @@
-import json
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
 import requests
+from DataCollector import DataCollector
 from flask import request
-import pandas as pd
-import pandas.io
 app = Flask(__name__)
 api = Api(app)
 
+
+def start_api():
+    app.run()  # Initialize the api server
 
 @app.route('/data/<path:url>', methods=['GET'])
 def getkeys(url):
@@ -16,16 +17,15 @@ def getkeys(url):
     return data, 200
 
 
-@app.route('/data', methods=['POST'])
-def post():
-    keys = request.json["keys"]  # Keys as list of column names
-    keys
-    return request.json, 200
+@app.route('/data/<path:url>', methods=['POST'])
+def post(url):
+    dt = DataCollector(keys=request.json, url=url)
+    test = dt.collect_columns_from_keys(dic=dt.response)
+    return test, 200
 
 
 def flatten_json(y):  # Magical flattening method
     out = {}
-    print(type(y))
 
     def flatten(x, name=''):
         print(type(x))

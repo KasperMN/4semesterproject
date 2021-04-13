@@ -1,30 +1,30 @@
 import json
+import sys
 
 import pandas as pd
 import requests
-from pandas import DataFrame
 
 
 class DataCollector:
-    def __init__(self, keys: list, url):
-        self.keys = keys
-        self.url = url
-
-        self.values = {}
-        for key in keys:
-            self.values[key] = []
-
-        """self.url = "https://link.speckle.dk/api/streams/grB5WJmsE/objects"
-        self.JSONContent = requests.get(self.url, verify=False).json()
-        self.content = json.dumps(self.JSONContent, indent=4, sort_keys=True)
-        self.df = pd.read_json(self.content)"""
+    def __init__(self, keys: dict, url):
+        self.keys = keys.get("Key")
+        self.response = requests.get(url, verify=False).json()
 
     def collect_columns_from_keys(self, dic):
         df = pd.DataFrame()
-        for x in self.values:
-            df[x] = json_extract(dic, x)
+        messages = {}
+        for x in self.keys:
+            try:
+                df[x] = json_extract(dic, x)
 
-        print(df)
+            except:
+                if x not in messages:
+                    messages[x] = "This Attribute Is Not Valid - Chose another or remove it"
+
+        if not messages:
+            return "Everything is fine"
+        else:
+            return messages
 
 
 # Magical json extract method
