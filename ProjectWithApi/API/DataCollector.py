@@ -7,24 +7,21 @@ import requests
 
 class DataCollector:
     def __init__(self, keys: dict, url):
-        self.keys = keys.get("Key")
+        self.keys = keys
         self.response = requests.get(url, verify=False).json()
 
-    def collect_columns_from_keys(self, dic):
+    def collect_columns_from_keys(self, nested_dictionary):
         df = pd.DataFrame()
-        messages = {}
+        error_messages = {}
         for x in self.keys:
             try:
-                df[x] = json_extract(dic, x)
+                df[x] = json_extract(nested_dictionary, x)
 
             except:
-                if x not in messages:
-                    messages[x] = "This Attribute Is Not Valid - Chose another or remove it"
+                if x not in error_messages:
+                    error_messages[x] = "This Attribute Is Not Valid - Chose another or remove it"
 
-        if not messages:
-            return "Everything is fine"
-        else:
-            return messages
+        return error_messages, df
 
 
 # Magical json extract method

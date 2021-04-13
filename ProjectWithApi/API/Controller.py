@@ -3,6 +3,7 @@ from flask_restful import Resource, Api, reqparse
 import requests
 from DataCollector import DataCollector
 from flask import request
+import DataBase
 app = Flask(__name__)
 api = Api(app)
 
@@ -17,11 +18,29 @@ def getkeys(url):
     return data, 200
 
 
-@app.route('/data/<path:url>', methods=['POST'])
-def post(url):
-    dt = DataCollector(keys=request.json, url=url)
-    test = dt.collect_columns_from_keys(dic=dt.response)
-    return test, 200
+@app.route('/data', methods=['POST'])
+def post():
+    url = request.json["url"]
+    keys = request.json["keys"]
+    target = request.json["target"]
+
+    print(url)
+    print(keys)
+    print(target)
+
+    dc = DataCollector(keys=keys, url=url)
+    error_messages, data = dc.collect_columns_from_keys(nested_dictionary=dc.response)
+
+    if not error_messages:  # If all went okay
+        db = DataBase.DbConnection(data=data)  # Initialize Database with found data from keys
+        # Preprocess the data
+        return "All gode", 200  # Testing
+
+    if error_messages:
+        return error_messages, 400
+
+
+
 
 
 def flatten_json(y):  # Magical flattening method
