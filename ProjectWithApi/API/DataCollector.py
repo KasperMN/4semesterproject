@@ -19,42 +19,38 @@ class DataCollector:
         self.content = json.dumps(self.JSONContent, indent=4, sort_keys=True)
         self.df = pd.read_json(self.content)"""
 
-    def collect_columns_from_keys(self, hej):
-        print(type(hej))
-        for i, element_i in enumerate(hej):
-            for j, element_j in enumerate(element_i):
-                if type(element_j) is dict:
-                    for a in element_j:
-                        print("IF")
-                        if a in self.keys:
-                            self.values[a].append(element_j[a])
-                        self.collect_columns_from_keys(element_j[a])
-                elif type(element_j) is list:
-                    for a in element_j:
-                        print("ELSE IF")
-                        if a in self.keys:
-                            self.values[a].append(element_j[a])
-                        self.collect_columns_from_keys(element_j[a])
+    def collect_columns_from_keys(self, dic):
+        df = pd.DataFrame()
+        for x in self.values:
+            df[x] = json_extract(dic, x)
 
-        print(self.values)
+        print(df)
 
-    """def flatten(x, name=''):
-        if type(x) is dict:
-            for a in x:
-                flatten(x[a], a + '_')
-        elif type(x) is list:
-            i = 0
-            for a in x:
-                flatten(a, name + '_')
-                i += 1
-        else:
-            out[name[:-1]] = x"""
+
+# Magical json extract method
+def json_extract(obj, key):
+    """Recursively fetch values from nested JSON."""
+    arr = []
+
+    def extract(obj, arr, key):
+        """Recursively search for values of key in JSON tree."""
+        if isinstance(obj, dict):
+            for k, v in obj.items():
+                if isinstance(v, (dict, list)):
+                    extract(v, arr, key)
+                elif k == key:
+                    arr.append(v)
+        elif isinstance(obj, list):
+            for item in obj:
+                extract(item, arr, key)
+        return arr
+
+    values = extract(obj, arr, key)
+    return values
 
 
 if __name__ == '__main__':
     dc = DataCollector(keys=["Area", "Volume", "Length"], url="hej")
-    url = "https://link.speckle.dk/api/streams/grB5WJmsE/objects"
-    JSONContent = requests.get(url, verify=False).json()
-    content = json.dumps(JSONContent, indent=4, sort_keys=True)
-    df = pd.read_json(content)
-    dc.collect_columns_from_keys(df)
+    with open(r"../../Data/data2.json") as json_file:
+        url = json.load(json_file)
+    dc.collect_columns_from_keys(url)
