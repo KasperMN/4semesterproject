@@ -29,7 +29,7 @@ class ModelHandler:
         gb_model = GradientBoostingClassifier()
         rf_model = RandomForestClassifier()
 
-        return [knn_model, gb_model, rf_model]
+        return [knn_model, gb_model]
 
     def create_smote_models(self):
         ''' @ Create SMOTE Models'''
@@ -37,7 +37,7 @@ class ModelHandler:
         gb_model_smote = GradientBoostingClassifier()
         rf_model_smote = RandomForestClassifier()
 
-        return [knn_model_smote, gb_model_smote, rf_model_smote]
+        return [knn_model_smote, gb_model_smote]
 
     def train_models(self, models: list):
         trained_models = []
