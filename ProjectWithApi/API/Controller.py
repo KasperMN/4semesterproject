@@ -36,8 +36,10 @@ def post():
     if not error_messages:  # If all went okay
         db = DataBase.DbConnection(data=data, table_name=database_table_name)  # Initialize Database with found data from keys
         data_from_db = db.collect_data(columns=chosen_columns)  # Fetches data from SqlLite database.db
+        #th = TheHandler(data_from_db, target_to_classify)
         prep = MachineLearning.PreProcessing(data=data_from_db)  # Preprocess the data
         prep.returns_processed_test_and_training_data(target=target_to_classify)  # Processes the data
+        #models = MachineLearning.Models(prep.get_data())
 
         return "DataBase Created, Preprocessing started...", 200  # Testing
     if error_messages:
