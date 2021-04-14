@@ -5,8 +5,8 @@ import requests
 
 class DataCollector:
     def __init__(self, keys: dict, url):
-        self.keys = keys
-        self.nested_data = requests.get(url, verify=False).json()
+        self.keys = keys  # Chosen columns to find in dataset
+        self.nested_data = requests.get(url, verify=False).json()  # Api Call - nested_data as dict with json
 
     def collect_columns_from_keys(self, nested_dictionary):
         df = pd.DataFrame()
@@ -14,10 +14,12 @@ class DataCollector:
         for x in self.keys:
             try:
                 df[x] = json_extract(nested_dictionary, x)
+                if df.shape[0] < 100:
+                    error_messages["Attribute error: {}".format(x)] = "Too few rows"
 
             except:
                 if x not in error_messages:
-                    error_messages[x] = "This Attribute Is Not Valid - Chose another or remove it"
+                    error_messages["Attribute error: {}".format(x)] = "Too many rows compared to other attributes"
 
         return error_messages, df
 
@@ -45,7 +47,4 @@ def json_extract(obj, key):
 
 
 if __name__ == '__main__':
-    dc = DataCollector(keys=["Area", "Volume", "Length"], url="hej")
-    with open(r"../../Data/data2.json") as json_file:
-        url = json.load(json_file)
-    dc.collect_columns_from_keys(url)
+    print("Debut Mode")

@@ -5,6 +5,8 @@ from DataCollector import DataCollector
 from flask import request
 import DataBase
 import MachineLearning
+import warnings
+warnings.filterwarnings("ignore")
 
 app = Flask(__name__)
 api = Api(app)
@@ -23,18 +25,20 @@ def getkeys(url):
 
 @app.route('/data', methods=['POST'])
 def post():
-    url = request.json["url"]
-    keys = request.json["keys"]
-    target = request.json["target"]
-    table_name = request.json["table_name"]
+    api_link = request.json["url"]
+    chosen_columns = request.json["keys"]
+    target_to_classify = request.json["target"]
+    database_table_name = request.json["table_name"]
 
-    data_collector = DataCollector(keys=keys, url=url)
+    data_collector = DataCollector(keys=chosen_columns, url=api_link)
     error_messages, data = data_collector.collect_columns_from_keys(nested_dictionary=data_collector.nested_data)
 
     if not error_messages:  # If all went okay
-        db = DataBase.DbConnection(data=data, table_name=table_name)  # Initialize Database with found data from keys
-        prep = MachineLearning.PreProcessing(columns=keys, table_name=table_name)  # Preprocess the data
-        prep.returns_processed_test_and_training_data(target=target)
+        db = DataBase.DbConnection(data=data, table_name=database_table_name)  # Initialize Database with found data from keys
+        data_from_db = db.collect_data(columns=chosen_columns)  # Fetches data from SqlLite database.db
+        prep = MachineLearning.PreProcessing(data=data_from_db)  # Preprocess the data
+        prep.returns_processed_test_and_training_data(target=target_to_classify)  # Processes the data
+
         return "DataBase Created, Preprocessing started...", 200  # Testing
     if error_messages:
         return error_messages, 400

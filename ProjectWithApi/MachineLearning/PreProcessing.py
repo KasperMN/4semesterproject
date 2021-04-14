@@ -4,23 +4,16 @@ from imblearn.over_sampling import SMOTE
 from pandas import DataFrame
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, QuantileTransformer
+import warnings
+warnings.filterwarnings("ignore")
 
 pd.set_option("display.width", 300)
 pd.set_option("display.max_columns", 20)
 
 
 class PreProcessing:
-    def __init__(self, columns, table_name: str):
-        self.conn = sqlite3.connect(r"../DataBase/database.db")
-        self.sql = self.create_sql_query(attributes_to_select=columns, table_name=table_name)
-        self.data = pd.read_sql(sql=self.sql, con=self.conn)
-
-    def create_sql_query(self, attributes_to_select: list, table_name: str):
-        attribute_string = ''.join(
-            [str("[" + column + '], ') if attributes_to_select.index(column) != len(attributes_to_select) - 1
-             else str("[" + column + "]") for column in attributes_to_select])
-
-        return "Select {0} FROM [{1}]".format(attribute_string, table_name)
+    def __init__(self, data):
+        self.data = data
 
     def returns_processed_test_and_training_data(self, target):
         print('Shape of Data: {}'.format(self.data.shape[0]))  # Prints num rows
@@ -114,6 +107,7 @@ class PreProcessing:
         # self.mapped_labels = dict(zip(enc.transform(enc.classes_), enc.classes_))
 
         return training_labels, test_labels
+
 
 if __name__ == '__main__':
     names = ["Area", "Structural", "Assembly Code"]
