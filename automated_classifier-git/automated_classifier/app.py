@@ -1,6 +1,7 @@
 import data as dt
 import machinelearning as ml
 
+
 def find_best_classifier(link: str, columns: list, target: str, table_name: str):
     # Extract Data From External Api
     data_collector = dt.DataCollector(chosen_columns=columns)  # Create instance

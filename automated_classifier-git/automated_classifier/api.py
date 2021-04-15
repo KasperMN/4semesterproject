@@ -5,6 +5,7 @@ from flask import request
 import warnings
 warnings.filterwarnings("ignore")
 
+
 _flask_application = Flask(__name__)
 api = Api(_flask_application)
 
