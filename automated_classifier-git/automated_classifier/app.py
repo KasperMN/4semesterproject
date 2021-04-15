@@ -1,6 +1,7 @@
 from automated_classifier.data import DataCollector
 from automated_classifier.data import Connection
 
+
 def find_best_classifier(link: str, columns: list, target: str, table_name: str):
     # Extract Data From External Api
     data_collector = DataCollector(chosen_columns=columns)  # Create instance
