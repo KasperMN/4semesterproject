@@ -1,5 +1,5 @@
-import data as dt
-import machinelearning as ml
+from automated_classifier import data as dt
+from automated_classifier import machinelearning as ml
 
 
 def find_best_classifier(link: str, columns: list, target: str, table_name: str):

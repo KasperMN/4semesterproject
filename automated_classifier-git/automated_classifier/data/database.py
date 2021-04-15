@@ -32,6 +32,6 @@ class Connection:
         return data
 
     def create_database(self):
-        if os.path.exists(r"data/database.db"):
-            os.remove(r"data/database.db")
-        self._conn = sqlite3.connect(r"data/database.db")
+        if os.path.exists(r"data/sql_lite.db"):
+            os.remove(r"data/sql_lite.db")
+        self._conn = sqlite3.connect(r"data/sql_lite.db")
