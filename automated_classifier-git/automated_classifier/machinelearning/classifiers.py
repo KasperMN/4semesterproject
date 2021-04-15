@@ -8,7 +8,7 @@ from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 
 class KNeighbors:
     def __init__(self):
-        self._params = defaultdict(leaf_size=[1, 5, 10],
+        self._params = defaultdict(leaf_size=[1, 2, 3, 5, 10, 20],
                                    n_neighbors=[1, 2, 3, 5, 10],
                                    p=[1, 2, 3])
         self._model = KNeighborsClassifier()
@@ -29,7 +29,7 @@ class KNeighbors:
 
 class GradientBoost:
     def __init__(self):
-        self._params = defaultdict(n_estimators=[1, 10, 20],
+        self._params = defaultdict(n_estimators=[1, 2, 3, 4, 5, 10, 20],
                                    learning_rate=[1, 2, 3],
                                    max_depth=[1, 2])
         self._model = GradientBoostingClassifier()
@@ -50,7 +50,7 @@ class GradientBoost:
 
 class RandomForest:
     def __init__(self):
-        self._params = defaultdict(n_estimators=[1, 10, 20],
+        self._params = defaultdict(n_estimators=[1, 5, 10, 15, 20],
                                    min_samples_split=[1, 2, 3],
                                    max_depth=[1, 2, 3],
                                    min_samples_leaf=[1, 2, 4])
@@ -65,6 +65,6 @@ class RandomForest:
         self._model = model
 
     def find_best_estimator(self, training_features, training_labels):
-        rscv = RandomizedSearchCV(self._model, self._params, n_iter=50, cv=3)
+        rscv = RandomizedSearchCV(self._model, self._params, n_iter=100, cv=3)
         rscv.fit(training_features, training_labels)
         self._model = rscv.best_estimator_

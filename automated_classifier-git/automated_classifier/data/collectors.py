@@ -21,16 +21,15 @@ class DataCollector:
     def api_data(self, api_link):
         self._api_data = requests.get(api_link, verify=False).json()
 
-
     @property
-    def chosen_data(self) -> pandas.DataFrame:
+    def chosen_data(self):
         for column in self._chosen_columns:
             try:
                 self._chosen_data[column] = json_extractor(self._api_data, column)
                 if self._chosen_data.shape[0] < 50:
                     self._error_messages["Attribute error: {}".format(column)] = "Too few rows"
             except ValueError:
-                if self._chosen_data not in self._error_messages:
+                if column not in self._error_messages:
                     self._error_messages["Attribute error: {}".format(column)] \
                         = "Too many rows compared to other attributes"
 
