@@ -10,6 +10,6 @@ def test_something():
                 "target": "Assembly Code",
                 "table_name": "Walls"}), content_type='application/json')
 
-    data = json.dumps(response.get_data(as_text=True))
+    data = json.dumps(response.get_preprocessed_data(as_text=True))
 
     assert response.status_code == 200

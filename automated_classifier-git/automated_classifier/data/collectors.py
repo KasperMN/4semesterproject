@@ -1,4 +1,6 @@
 from collections import defaultdict
+from json import JSONDecodeError
+
 from automated_classifier.common import json_extractor
 import pandas
 import requests
@@ -19,12 +21,13 @@ class DataCollector:
     def api_data(self, api_link):
         self._api_data = requests.get(api_link, verify=False).json()
 
+
     @property
     def chosen_data(self) -> pandas.DataFrame:
         for column in self._chosen_columns:
             try:
                 self._chosen_data[column] = json_extractor(self._api_data, column)
-                if self._chosen_data.shape[0] < 100:
+                if self._chosen_data.shape[0] < 50:
                     self._error_messages["Attribute error: {}".format(column)] = "Too few rows"
             except ValueError:
                 if self._chosen_data not in self._error_messages:

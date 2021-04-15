@@ -14,9 +14,6 @@ class Connection:
 
     @property
     def connection(self):
-        if os.path.exists("data/database.db"):
-            os.remove("data/database.db")
-        self._conn = sqlite3.connect("data/database.db")
         return self._conn
 
     @property
@@ -33,3 +30,8 @@ class Connection:
     def get_data(self, sql, connection):
         data = pd.read_sql(sql=sql, con=connection)
         return data
+
+    def create_database(self):
+        if os.path.exists(r"data/database.db"):
+            os.remove(r"data/database.db")
+        self._conn = sqlite3.connect(r"data/database.db")
