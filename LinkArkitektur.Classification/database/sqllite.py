@@ -28,7 +28,6 @@ class DBHandler:
         self.cursor.execute(create_company)
         self.cursor.execute(insert_companies)
         self.cursor.execute(create_projects)
-
         self.cursor.execute(insert_projects)
 
     def add_foreign_key(self):
