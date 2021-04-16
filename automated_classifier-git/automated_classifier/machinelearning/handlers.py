@@ -41,11 +41,17 @@ class AccuracyHandler:
         self.total_accuracy = 0  # For incrementing accuracy
         self.df_scores = DataFrame  # For displaying score
         self._best_model_name = None
+        self._best_model_score = ""
 
     @property
     def best_model_name(self):
         self._best_model_name = self.df_scores.index[0]
         return self._best_model_name
+
+    @property
+    def best_model_score(self):
+        self._best_model_score = self.df_scores.iloc[0]
+        return self._best_model_score.to_dict()
 
     def add_score(self, name, classifier):
         self.index.append(name)

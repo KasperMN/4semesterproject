@@ -1,3 +1,4 @@
+import os
 from automated_classifier import data as dt
 from automated_classifier import machinelearning as ml
 import joblib
@@ -15,7 +16,8 @@ def find_best_classifier(link: str, columns: list, target: str, table_name: str)
     db_con = dt.Connection(table_name=table_name, data_to_insert=chosen_data, columns_to_select=columns)  # create database
     db_con.create_database()  # Create the connection and database
     db_con.insert_data()  # Insert the data
-    unprocessed_data = db_con.get_data(sql=db_con.select_query, connection=db_con.connection)
+    test_query = "SELECT * FROM Walls LIMIT 300"
+    unprocessed_data = db_con.get_data(sql=test_query, connection=db_con.connection)
 
     # then preprocess the data from database
     pre_processor = dt.PreProcessing(data=unprocessed_data)
@@ -36,10 +38,12 @@ def find_best_classifier(link: str, columns: list, target: str, table_name: str)
 
     model = fitted_models[accuracy_handler.best_model_name]
     filename = "program/trained_model.sav"
-    joblib.dump(model, filename)
-    # Save the best classifier in folder as file to load
-    # Return the statistics of the best model and status code
-    return {'Status Code': 200}
+    if os.path.exists(r"program/trained_model.sav"):
+        os.remove(r"program/trained_model.sav")
+    joblib.dump(model, filename)  # Save the best classifier in folder as file to load
+
+    best_model_score = accuracy_handler.best_model_score  # Return the statistics of the best model and status code
+    return {"Model Name": accuracy_handler.best_model_name, 'Model Score': best_model_score}
 
 
 def predict():
