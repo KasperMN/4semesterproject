@@ -47,7 +47,7 @@ def returns_model():
 
 @_flask_application.route('data/prediction', methods=['POST'])
 def predict_on_data():
-
+    pass
 
 
 
