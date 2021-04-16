@@ -1,3 +1,6 @@
+from __future__ import division
+import sys
+
 import pandas as pd
 from imblearn.over_sampling import SMOTE
 from pandas import DataFrame
@@ -23,6 +26,22 @@ class PreProcessing:
         self._data.drop_duplicates(inplace=True)  # Drops duplicate rows
         print('Shape of Data after dropping duplicates: {}'.format(self._data.shape[0]))  # Prints num rows
 
+        hej = self._data[target].value_counts()
+        count = self._data[target].count()
+        unique = self._data[target].nunique()
+
+        rows_to_drop = []
+        print(self._data[target].value_counts().to_dict())
+
+        for key, value in self._data[target].value_counts().to_dict().items():
+            min_values = count / 100
+            if value < min_values:
+                rows_to_drop.append(key)
+
+        print("rows to drop: {}".format(rows_to_drop))
+        self._data = self._data[self._data[target].isin(rows_to_drop) == False]
+        print(self._data[target].value_counts().to_dict())
+
         ''' @@ Specify target and features '''
         target_column = self._data[target]  # Separates Assembly Code from features
         features = self._data.drop(target, axis=1)  # Separates Features from Assembly Code
@@ -46,7 +65,6 @@ class PreProcessing:
         """ @ Creates Oversampled Dataset from original"""
         smote = SMOTE(k_neighbors=1)  # Synthetic Minority Oversampling Technique
         training_features_smote, training_labels_smote = smote.fit_resample(training_features, training_labels)
-
 
         self.print_data(  # Prints number of elements in each DataFrame
             training_features=training_features,

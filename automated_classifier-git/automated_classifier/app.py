@@ -1,5 +1,6 @@
 from automated_classifier import data as dt
 from automated_classifier import machinelearning as ml
+import joblib
 
 
 def find_best_classifier(link: str, columns: list, target: str, table_name: str):
@@ -33,7 +34,9 @@ def find_best_classifier(link: str, columns: list, target: str, table_name: str)
         accuracy_handler.add_score(key, model)
     accuracy_handler.display_scores()
 
-    """ Fjern target hvor den forekommer mindre end x procent af datasetet """
+    model = fitted_models[accuracy_handler.best_model_name]
+    filename = "program/trained_model.sav"
+    joblib.dump(model, filename)
     # Save the best classifier in folder as file to load
     # Return the statistics of the best model and status code
     return {'Status Code': 200}
@@ -41,6 +44,9 @@ def find_best_classifier(link: str, columns: list, target: str, table_name: str)
 
 def predict():
     # Load the model
+    #filename = "program/trained_model.sav"
+    #loaded_model = joblib.load(filename=filename)
+    #result = loaded_model.score(data)
     # Make predictions
     # Return the predictions as file or strings
     return None

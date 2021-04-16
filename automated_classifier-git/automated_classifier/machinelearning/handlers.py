@@ -39,14 +39,19 @@ class AccuracyHandler:
         self.scores = {'total_accuracy': []}  # Collecting the scores
         self.index = []  # Names for classifiers
         self.total_accuracy = 0  # For incrementing accuracy
-        self.df_scores = DataFrame  # For displaying scores
+        self.df_scores = DataFrame  # For displaying score
+        self._best_model_name = None
+
+    @property
+    def best_model_name(self):
+        self._best_model_name = self.df_scores.index[0]
+        return self._best_model_name
 
     def add_score(self, name, classifier):
         self.index.append(name)
         cv_result = cross_validate(  # Iterating over 10 pieces of data to find best score
-            estimator=classifier, X=self.test_features, y=self.test_labels, scoring=self.scoring,
+            estimator=classifier, X=self.test_features, y=self.test_labels.values.ravel(), scoring=self.scoring,
             verbose=1, n_jobs=2, cv=10)
-
         for _, element in enumerate(cv_result):  # element is column name
             if element not in self.scores:  # Add new column if it does not exist
                 self.scores[element] = []  # Creates new column with that name

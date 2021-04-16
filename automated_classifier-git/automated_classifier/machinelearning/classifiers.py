@@ -8,9 +8,9 @@ from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 
 class KNeighbors:
     def __init__(self):
-        self._params = defaultdict(leaf_size=[1, 2, 3, 5, 10, 20],
-                                   n_neighbors=[1, 2, 3, 5, 10],
-                                   p=[1, 2, 3])
+        self._params = defaultdict(leaf_size=[1, 2, 3, 5, 10, 20, 50],
+                                   n_neighbors=[1, 2, 3, 5, 10, 25],
+                                   p=[1, 2, 3, 5, 10])
         self._model = KNeighborsClassifier()
 
     @property
@@ -23,15 +23,16 @@ class KNeighbors:
 
     def find_best_estimator(self, training_features, training_labels):
         gscv = GridSearchCV(self._model, self._params, cv=3)
-        gscv.fit(training_features, training_labels)
+        gscv.fit(training_features, training_labels.values.ravel())
+        print(gscv.best_params_)
         self.model = gscv.best_estimator_
 
 
 class GradientBoost:
     def __init__(self):
-        self._params = defaultdict(n_estimators=[1, 2, 3, 4, 5, 10, 20],
-                                   learning_rate=[1, 2, 3],
-                                   max_depth=[1, 2])
+        self._params = defaultdict(n_estimators=[1, 2, 3, 4, 5, 10, 20, 50],
+                                   learning_rate=[1, 2, 3, 5, 10],
+                                   max_depth=[1, 2, 3, 5, 10])
         self._model = GradientBoostingClassifier()
 
     @property
@@ -44,16 +45,17 @@ class GradientBoost:
 
     def find_best_estimator(self, training_features, training_labels):
         gscv = GridSearchCV(self._model, self._params, cv=3)
-        gscv.fit(training_features, training_labels)
+        gscv.fit(training_features, training_labels.values.ravel())
+        print(gscv.best_params_)
         self._model = gscv.best_estimator_
 
 
 class RandomForest:
     def __init__(self):
-        self._params = defaultdict(n_estimators=[1, 5, 10, 15, 20],
-                                   min_samples_split=[1, 2, 3],
-                                   max_depth=[1, 2, 3],
-                                   min_samples_leaf=[1, 2, 4])
+        self._params = defaultdict(n_estimators=[1, 5, 10, 15, 20, 50],
+                                   min_samples_split=[1, 2, 3, 5, 10],
+                                   max_depth=[1, 2, 3, 5, 10],
+                                   min_samples_leaf=[1, 2, 3, 5, 10])
         self._model = RandomForestClassifier()
 
     @property
@@ -66,5 +68,6 @@ class RandomForest:
 
     def find_best_estimator(self, training_features, training_labels):
         rscv = RandomizedSearchCV(self._model, self._params, n_iter=100, cv=3)
-        rscv.fit(training_features, training_labels)
+        rscv.fit(training_features, training_labels.values.ravel())
+        print(rscv.best_params_)
         self._model = rscv.best_estimator_
