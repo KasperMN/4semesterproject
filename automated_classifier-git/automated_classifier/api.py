@@ -1,6 +1,6 @@
 import requests
 
-from automated_classifier import app
+from automated_classifier.app import Application
 from flask import Flask
 from flask_restful import Api, Resource
 from flask import request
@@ -35,15 +35,8 @@ def get_keys(url):
 
 @_flask_application.route('/data', methods=['POST'])
 def returns_model():
-    api_link = request.json["url"]
-    chosen_columns = request.json["keys"]
-    chosen_target = request.json["target"]
-    chosen_table_name = request.json["table_name"]
-
-    return app.find_best_classifier(
-        link=api_link, columns=chosen_columns,
-        target=chosen_target, table_name=chosen_table_name
-    )
+    app = Application(request.json["url"], request.json["keys"], request.json["target"], request.json["table_name"])
+    return app.find_best_classifier()
 
 """@_flask_application.route('data/prediction', methods=['POST'])
 def predict_on_data():

@@ -1,6 +1,4 @@
 from collections import defaultdict
-from json import JSONDecodeError
-
 from automated_classifier.common import json_extractor
 import pandas
 import requests
@@ -32,8 +30,10 @@ class DataCollector:
                 if column not in self._error_messages:
                     self._error_messages["Attribute error: {}".format(column)] \
                         = "Too many rows compared to other attributes"
-
-        return self._chosen_data
+        if self._error_messages:
+            return None
+        else:
+            return self._chosen_data
 
     @property
     def error_messages(self):

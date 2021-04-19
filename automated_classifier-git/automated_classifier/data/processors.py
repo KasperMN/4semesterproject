@@ -20,6 +20,7 @@ class PreProcessing:
         self._processed_data = {}
 
     def create_processed_data(self, target: str):
+        print("---> PreProcessing The Data")
         print('Shape of Data: {}'.format(self._data.shape[0]))  # Prints num rows
 
         ''' @@ Remove Duplicates From Data '''
@@ -48,7 +49,7 @@ class PreProcessing:
 
         ''' @@ Split data into training and test '''
         training_features, test_features, training_labels, test_labels = train_test_split(
-            features, target_column, test_size=0.2, random_state=1, shuffle=True, stratify=target_column)
+            features, target_column, test_size=0.1, random_state=1, shuffle=True, stratify=target_column)
 
         ''' @@ Get Category columns and Numerical columns '''
         categorical_cols = self.get_categorical_columns(features)  # Names of string columns
