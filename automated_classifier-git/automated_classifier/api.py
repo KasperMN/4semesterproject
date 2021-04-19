@@ -45,9 +45,9 @@ def returns_model():
         target=chosen_target, table_name=chosen_table_name
     )
 
-@_flask_application.route('data/prediction', methods=['POST'])
+"""@_flask_application.route('data/prediction', methods=['POST'])
 def predict_on_data():
-    pass
+    pass"""
 
 
 
