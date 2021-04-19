@@ -31,8 +31,6 @@ class ModelHandler:
         self._fitted_models[result.name] = result.model
 
     def fit_models(self):
-        print("\n@@ Fitting models @@")
-
         # Step 1: Init multiprocessing.Pool()
         pool = mp.Pool(mp.cpu_count())
 
@@ -88,7 +86,7 @@ class AccuracyHandler:
     def display_scores(self):
         self.df_scores = pd.DataFrame(self.scores, index=self.index)  # CREATE DATAFRAME
         self.df_scores = self.df_scores.sort_values(by=['total_accuracy'], ascending=False)
-        print("@@ Accuracy Scores @@ \n {}".format(self.df_scores))
+        print("\n@@ Accuracy Scores @@ \n {}".format(self.df_scores))
 
     def get_score(self):
         self.df_scores = pd.DataFrame(self.scores, index=self.index)  # CREATE DATAFRAME

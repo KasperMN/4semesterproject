@@ -36,7 +36,7 @@ class KNeighbors:
 
         end = time.time()
         print('\n---> {0}: Found Parameters in {1:.2f} seconds'.format(name, end - start))
-        print("Params: ", gscv.best_params_)
+        print("Parameters = ", gscv.best_params_)
         return self
 
 
@@ -70,7 +70,7 @@ class GradientBoost:
 
         end = time.time()
         print('\n---> {0}: Found Parameters in {1:.2f} seconds '.format(name, end - start))
-        print("Params: ", gscv.best_params_)
+        print("Parameters = ", gscv.best_params_)
         return self
 
 
@@ -105,5 +105,5 @@ class RandomForest:
 
         end = time.time()
         print('\n---> {0}: Found Parameters in {1:.2f} seconds '.format(name, end - start))
-        print("Params: ", rscv.best_params_)
+        print("Parameters = ", rscv.best_params_)
         return self

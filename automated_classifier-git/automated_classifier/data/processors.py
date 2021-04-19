@@ -20,28 +20,24 @@ class PreProcessing:
         self._processed_data = {}
 
     def create_processed_data(self, target: str):
-        print("---> PreProcessing The Data")
-        print('Shape of Data: {}'.format(self._data.shape[0]))  # Prints num rows
+        print('---> Number of rows in dataset: {}'.format(self._data.shape[0]))  # Prints num rows
 
         ''' @@ Remove Duplicates From Data '''
         self._data.drop_duplicates(inplace=True)  # Drops duplicate rows
-        print('Shape of Data after dropping duplicates: {}'.format(self._data.shape[0]))  # Prints num rows
+        print('---> Number after removing duplicates: {}'.format(self._data.shape[0]))  # Prints num rows
 
-        hej = self._data[target].value_counts()
-        count = self._data[target].count()
-        unique = self._data[target].nunique()
+        print('---> Target variants: {}'.format(self._data[target].value_counts().to_dict().keys()))
 
         rows_to_drop = []
-        print(self._data[target].value_counts().to_dict())
-
         for key, value in self._data[target].value_counts().to_dict().items():
-            min_values = count / 100
+            min_values = self._data[target].count() / 100
             if value < min_values:
                 rows_to_drop.append(key)
 
-        print("rows to drop: {}".format(rows_to_drop))
+        print("---> Targets with less than 1 percent of rows: {}".format(rows_to_drop))
         self._data = self._data[self._data[target].isin(rows_to_drop) == False]
-        print(self._data[target].value_counts().to_dict())
+
+        print('---> Dataset after dropping rows: {}'.format(self._data[target].value_counts().to_dict().keys()))
 
         ''' @@ Specify target and features '''
         target_column = self._data[target]  # Separates Assembly Code from features
@@ -90,12 +86,13 @@ class PreProcessing:
     def print_data(cls, training_features: DataFrame, test_features: DataFrame,
                    training_labels: DataFrame, test_labels: DataFrame,
                    training_features_smote: DataFrame, training_labels_smote: DataFrame):
-        print("\nTraining Features: {0}"  # Display number of rows
-              "\nTest Features: {1}"
-              "\nTraining Labels: {2}"
-              "\nTest Labels: {3}"
-              "\nTraining Features Smote: {4}"
-              "\nTraining Labels Smote: {5}".format(
+        print("\n@ Number of rows in each data set")
+        print("---> Training Features: {0}"  # Display number of rows
+              "\n---> Test Features: {1}"
+              "\n---> Training Labels: {2}"
+              "\n---> Test Labels: {3}"
+              "\n---> Training Features Smote: {4}"
+              "\n---> Training Labels Smote: {5}".format(
             len(training_features), len(test_features),
             len(training_labels), len(test_labels),
             len(training_features_smote), len(training_labels_smote)))

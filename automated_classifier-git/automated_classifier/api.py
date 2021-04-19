@@ -36,7 +36,7 @@ def get_keys(url):
 @_flask_application.route('/data', methods=['POST'])
 def returns_model():
     app = Application(request.json["url"], request.json["keys"], request.json["target"], request.json["table_name"])
-    return app.find_best_classifier()
+    return app.return_best_model()
 
 """@_flask_application.route('data/prediction', methods=['POST'])
 def predict_on_data():
