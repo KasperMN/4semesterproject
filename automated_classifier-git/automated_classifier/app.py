@@ -146,18 +146,12 @@ class PredictApp:
         data.loc[:, pred_num] = qt.transform(data.loc[:, pred_num])
 
         assemblycodes = hkl.load('program/assemblycodes.hkl')
-        print(data)
 
         # Make predictions
-
         probabilities = loaded_model.predict_proba(data)
         prediction = loaded_model.predict(data)
-        prob_list =[]
-        for c in probabilities:
-            print(max(c))
 
-        print(prediction)
-
-
+        for i, _ in enumerate(prediction):
+            print("Prediction: {}, Percentage: {}".format(assemblycodes[str(prediction[i])],(max(probabilities[i]))))
 
         return None
