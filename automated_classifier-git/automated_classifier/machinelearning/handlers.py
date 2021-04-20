@@ -32,7 +32,7 @@ class ModelHandler:
 
     def fit_models(self):
         # Step 1: Init multiprocessing.Pool()
-        pool = mp.Pool(mp.cpu_count())
+        pool = mp.Pool(mp.cpu_count() - 1)
 
         # Step 2: pool.apply
         for key, classifier in self._org_models.items():

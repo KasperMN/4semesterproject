@@ -1,6 +1,7 @@
 from __future__ import division
 import sys
-
+from pickle import dump
+import hickle as hkl
 import pandas as pd
 from imblearn.over_sampling import SMOTE
 from pandas import DataFrame
@@ -124,6 +125,9 @@ class PreProcessing:
         training_features.loc[:, numerical_cols] = qt.fit_transform(training_features.loc[:, numerical_cols])
         test_features.loc[:, numerical_cols] = qt.transform(test_features.loc[:, numerical_cols])
 
+        hkl.dump(le, 'program/le.hkl', mode='w')
+        hkl.dump(qt, 'program/qt.hkl', mode='w')
+
         ''' @ Keep selected columns '''
         my_cols = categorical_cols + numerical_cols
         training_features = training_features[my_cols].copy()
@@ -136,7 +140,8 @@ class PreProcessing:
         enc = LabelEncoder()  # Label Encoder
         training_labels = enc.fit_transform(training_labels)
         test_labels = enc.transform(test_labels)
-        # self.mapped_labels = dict(zip(enc.transform(enc.classes_), enc.classes_))
+        mapped_labels = dict(zip(enc.transform(enc.classes_), enc.classes_))
+        hkl.dump(mapped_labels, 'program/assemblycodes.hkl', 'w')
         ''' @@ Numpy Array to DataFrame '''
         training_labels = pd.DataFrame(data=training_labels, columns=[target], index=None)
         test_labels = pd.DataFrame(data=test_labels, columns=[target], index=None)

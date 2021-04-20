@@ -1,13 +1,15 @@
+import pandas as pd
 import requests
 
-from automated_classifier.app import Application
+from automated_classifier.app import TrainerApp
+from automated_classifier.app import PredictApp
 from flask import Flask
 from flask_restful import Api, Resource
 from flask import request
 from automated_classifier.common import extractors
 import warnings
-warnings.filterwarnings("ignore")
 
+warnings.filterwarnings("ignore")
 
 _flask_application = Flask(__name__)
 api = Api(_flask_application)
@@ -35,13 +37,16 @@ def get_keys(url):
 
 @_flask_application.route('/data', methods=['POST'])
 def returns_model():
-    app = Application(request.json["url"], request.json["keys"], request.json["target"], request.json["table_name"])
+    app = TrainerApp(request.json["url"], request.json["keys"], request.json["target"], request.json["table_name"])
     return app.return_best_model()
 
-"""@_flask_application.route('data/prediction', methods=['POST'])
+
+@_flask_application.route('/predict', methods=['POST'])
 def predict_on_data():
-    pass"""
-
-
+    df = pd.DataFrame(request.json["params"])
+    print(df)
+    app = PredictApp()
+    app.predict_classification(df)
+    return "ok", 200
 
 

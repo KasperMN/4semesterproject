@@ -1,13 +1,17 @@
 from __future__ import division
 import os
 import time
+
+import numpy as np
+from pandas import DataFrame
+
 from automated_classifier import data as dt
 from automated_classifier import machinelearning as ml
 import joblib
+import hickle as hkl
 
-
-class Application:
-    def __init__(self, link: str, columns: list, target: str, table_name: str):
+class TrainerApp:
+    def __init__(self, link: str = "", columns: list = None, target: str = "", table_name: str = ""):
         self._db_connection = dt.Connection(table_name, columns)
         self._data_collector = dt.DataCollector(chosen_columns=columns)
         self._selected_data = None
@@ -50,15 +54,6 @@ class Application:
         print('@@ Found Best Model in {:.2f} minutes'.format((end - start) / 60))
         return {"Model Name": self._best_model_name, 'Model Score': self._best_model_score}
 
-    def predict_classification(self):
-        # Load the model
-        # filename = "program/trained_model.sav"
-        # loaded_model = joblib.load(filename=filename)
-        # result = loaded_model.score(data)
-        # Make predictions
-        # Return the predictions as file or strings
-        return None
-
     def collect_data_from_api(self):
         print("\n@@ Collect data from external API")
         start = time.time()
@@ -90,6 +85,8 @@ class Application:
     def process_data_from_db(self):
         print("\n@@ Process the Data")
         start = time.time()
+
+        # test_query = "select * from walls limit 100"
 
         self._db_connection.create_select_query()
         unprocessed_data = self._db_connection.get_data()
@@ -129,3 +126,38 @@ class Application:
         joblib.dump(self._best_model, filename)
 
 
+class PredictApp:
+    def __init__(self):
+        self._filename = "program/trained_model.sav"
+
+    def predict_classification(self, data: DataFrame):
+        # Load the model
+        loaded_model = joblib.load(filename=self._filename)
+
+        # Process data before prediction
+        le = hkl.load('program/le.hkl')
+        qt = hkl.load('program/qt.hkl')
+
+        p = dt.PreProcessing(data)
+        pred_num = p.get_numerical_columns(data)
+        pred_cat = p.get_categorical_columns(data)
+
+        data.loc[:, pred_cat] = le.transform(data.loc[:, pred_cat].values.ravel())
+        data.loc[:, pred_num] = qt.transform(data.loc[:, pred_num])
+
+        assemblycodes = hkl.load('program/assemblycodes.hkl')
+        print(data)
+
+        # Make predictions
+
+        probabilities = loaded_model.predict_proba(data)
+        prediction = loaded_model.predict(data)
+        prob_list =[]
+        for c in probabilities:
+            print(max(c))
+
+        print(prediction)
+
+
+
+        return None
