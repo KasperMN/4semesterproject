@@ -78,7 +78,7 @@ class RandomForest:
     def __init__(self, name):
         self._params = defaultdict(n_estimators=[1, 5, 10, 15, 20, 50, 100],
                                    min_samples_split=[1, 2, 3, 5, 10],
-                                   max_depth=[1, 2, 3, 5, 10, 20, 40],
+                                   max_depth=[1, 2, 3, 5, 10, 20, 40, 50],
                                    min_samples_leaf=[1, 2, 3, 5, 10])
         self._model = RandomForestClassifier()
         self._name = name
