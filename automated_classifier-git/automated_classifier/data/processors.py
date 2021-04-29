@@ -101,8 +101,7 @@ class PreProcessing:
     @classmethod
     def get_categorical_columns(cls, features):
         return [cname for cname in features.columns  # Select categorical columns
-                if features[cname].dtype == "object"  # IF the type is of object (string)
-                and features[cname].nunique() < 10]  # And has less than 10 unique features
+                if features[cname].dtype == "object"]  # IF the type is of object (string)
 
     @classmethod
     def get_numerical_columns(cls, features):
