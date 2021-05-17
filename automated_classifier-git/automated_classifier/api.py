@@ -43,7 +43,8 @@ def returns_model():
 
 @_flask_application.route('/predict', methods=['POST'])
 def predict_on_data():
-    df = pd.DataFrame(request.json["params"])
+    print(request.json["params"])
+    df = pd.DataFrame(request.json["params"], index=[0])
 
     app = PredictApp()
     app.predict_classification(df)

@@ -29,17 +29,6 @@ class PreProcessing:
 
         print('---> Target variants: {}'.format(self._data[target].value_counts().to_dict().keys()))
 
-        rows_to_drop = []
-        for key, value in self._data[target].value_counts().to_dict().items():
-            min_values = self._data[target].count() / 100
-            if value < min_values:
-                rows_to_drop.append(key)
-
-        print("---> Targets with less than 1 percent of rows: {}".format(rows_to_drop))
-        self._data = self._data[self._data[target].isin(rows_to_drop) == False]
-
-        print('---> Dataset after dropping rows: {}'.format(self._data[target].value_counts().to_dict().keys()))
-
         ''' @@ Specify target and features '''
         target_column = self._data[target]  # Separates Assembly Code from features
         features = self._data.drop(target, axis=1)  # Separates Features from Assembly Code
