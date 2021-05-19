@@ -47,7 +47,11 @@ def predict_on_data():
     df = pd.DataFrame(request.json["params"], index=[0])
 
     app = PredictApp()
-    app.predict_classification(df)
+    return app.predict_classification(df), 200
+
+
+@_flask_application.route('/test/predict/dataset', methods=['POST'])
+def predict_on_dataset():
+    app = PredictApp()
+    app.test_predict_dataset()
     return "ok", 200
-
-

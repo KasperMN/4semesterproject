@@ -3,6 +3,7 @@ import os
 import time
 
 import numpy as np
+import pandas as pd
 from pandas import DataFrame
 
 from automated_classifier import data as dt
@@ -151,7 +152,40 @@ class PredictApp:
         probabilities = loaded_model.predict_proba(data)
         prediction = loaded_model.predict(data)
 
-        for i, _ in enumerate(prediction):
-            print("Prediction: {}, Percentage: {}".format(assemblycodes[str(prediction[i])],(max(probabilities[i]))))
+        res = ""
 
-        return None
+        for i, _ in enumerate(prediction):
+            res = {"Prediction": assemblycodes[str(prediction[i])], "Percentage": max(probabilities[i])}
+
+        return res
+
+    def test_predict_dataset(self):
+        # Load data
+        data = pd.read_csv("data/test1.csv", index_col=0)
+
+        # Load model and make predict and probability
+        loaded_model = joblib.load('program/trained_model.sav')
+        probabilities = loaded_model.predict_proba(data)
+        prediction = loaded_model.predict(data)
+
+        assemblycodes = hkl.load('program/assemblycodes.hkl')
+
+        # Load encoder and transformer to inverse the dataset
+        le = hkl.load('program/le.hkl')
+        qt = hkl.load('program/qt.hkl')
+
+        numcols = data.drop('Base Constraint', axis=1)
+        numcols_inversed = qt.inverse_transform(numcols)
+        df = pd.DataFrame(numcols_inversed, columns=numcols.columns)
+        df['Base Constraint'] = le.inverse_transform(data['Base Constraint'])
+
+        pred = []
+        prob = []
+
+        for i,_ in enumerate(prediction):
+            pred.append(format(assemblycodes[str(prediction[i])]))
+            prob.append(max(probabilities[i]))
+
+        df['Assembly Code'] = pred
+        df['Probability'] = prob
+        df.to_csv("predtest.csv")
