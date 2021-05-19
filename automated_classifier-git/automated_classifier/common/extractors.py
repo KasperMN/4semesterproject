@@ -19,7 +19,7 @@ def json_extractor(obj, key):
     return values
 
 
-def flatten_json(y):  # Magical flattening method
+def flatten_json(data):  # Magical flattening method
     out = {}
 
     def flatten(x, name=''):
@@ -34,5 +34,5 @@ def flatten_json(y):  # Magical flattening method
         else:
             out[name[:-1]] = x
 
-    flatten(y)
+    flatten(data)
     return out

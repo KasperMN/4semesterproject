@@ -1,3 +1,6 @@
+import concurrent.futures
+import threading
+
 from automated_classifier.machinelearning import classifiers
 from pandas import DataFrame
 import pandas as pd
@@ -31,6 +34,19 @@ class ModelHandler:
         self._fitted_models[result.name] = result.model
 
     def fit_models(self):
+        """
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            results = []
+            for key, classifier in self._org_models.items():
+                name = classifier.name
+                results.append(executor.submit(classifier.find_best_estimator,
+                                               self._data["training_features"], self._data["training_labels"], name))
+
+            for res in results:
+                self.insert_model(res.result())
+
+        """
+
         # Step 1: Init multiprocessing.Pool()
         pool = mp.Pool(mp.cpu_count() - 1)
 

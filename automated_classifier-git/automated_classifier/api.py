@@ -29,7 +29,6 @@ def get_keys(url):
             if key not in keys_list:
                 keys_list.append(key)
 
-
     except Exception:
         return Exception, 400
     return {"Column Names": keys_list}

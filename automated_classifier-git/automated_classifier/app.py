@@ -11,6 +11,7 @@ from automated_classifier import machinelearning as ml
 import joblib
 import hickle as hkl
 
+
 class TrainerApp:
     def __init__(self, link: str = "", columns: list = None, target: str = "", table_name: str = ""):
         self._db_connection = dt.Connection(table_name, columns)
