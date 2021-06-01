@@ -26,17 +26,15 @@ class ModelHandler:
         self._org_models["KNeighbors"] = classifiers.KNeighbors("KNeighbors")
         self._org_models["GradientBoost"] = classifiers.GradientBoost("GradientBoost")
         self._org_models["RandomForest"] = classifiers.RandomForest("RandomForest")
-        self._org_models["SupportVector"] = classifiers.SupportVector("SupportVector")
         self._org_models["KNeighbors_Smote"] = classifiers.KNeighbors("KNeighbors_Smote")
         self._org_models["GradientBoost_Smote"] = classifiers.GradientBoost("GradientBoost_Smote")
         self._org_models["RandomForest_Smote"] = classifiers.RandomForest("RandomForest_Smote")
-        self._org_models["SupportVector_Smote"] = classifiers.SupportVector("SupportVector_Smote")
 
     def insert_model(self, result):
         self._fitted_models[result.name] = result.model
 
     def fit_models(self):
-        """
+
         with concurrent.futures.ProcessPoolExecutor() as executor:
             results = []
             for key, classifier in self._org_models.items():
@@ -61,7 +59,7 @@ class ModelHandler:
 
         pool.close()
         pool.join()
-
+        """
 class AccuracyHandler:
     def __init__(self, test_features: DataFrame, test_labels: DataFrame):
         self.scoring = ["accuracy", "balanced_accuracy", "f1_weighted"]  # Type of accuracies we want

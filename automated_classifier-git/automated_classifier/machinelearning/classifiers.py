@@ -116,7 +116,7 @@ class RandomForest:
 
 class SupportVector:
     def __init__(self, name):
-        self._params = defaultdict(kernel=['linear', 'poly', 'rbf', 'sigmoid', 'precomputed'],
+        self._params = defaultdict(kernel=['linear', 'poly', 'rbf', 'sigmoid'],
                                    gamma=['scale', 'auto'],
                                    decision_function_shape=['ovo', 'ovr'],
                                    shrinking=[True, False])
