@@ -5,6 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from sklearn.svm import SVC
+from sklearn.neural_network import MLPClassifier
 
 
 class KNeighbors:
@@ -114,9 +115,10 @@ class RandomForest:
         print("Parameters = ", rscv.best_params_)
         return self
 
+
 class SupportVector:
     def __init__(self, name):
-        self._params = defaultdict(kernel=['linear', 'poly', 'rbf', 'sigmoid', 'precomputed'],
+        self._params = defaultdict(kernel=['linear', 'poly', 'rbf', 'sigmoid'],
                                    gamma=['scale', 'auto'],
                                    decision_function_shape=['ovo', 'ovr'],
                                    shrinking=[True, False])
@@ -148,3 +150,39 @@ class SupportVector:
         print("Parameters = ", gscv.best_params_)
         return self
 
+
+class NeuralNetwork:
+    def __init__(self, name):
+        self._params = defaultdict(hidden_layer_sizes=[150, 200, 300, 400],
+                                   learning_rate_init=[0.001, 0.002, 0.003],
+                                   max_iter=[800])
+        # n_iter_no_change=[5, 10, 15, 20]
+        # max_iter=[100, 200, 300]
+        # learning_rate=["constant", "invscaling", "adaptive"]
+        self._model = MLPClassifier()
+        self._name = name
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def model(self):
+        return self._model
+
+    @model.setter
+    def model(self, model):
+        self._model = model
+
+    def find_best_estimator(self, training_features, training_labels, name):
+        print("---> {}: Finding Parameters".format(name))
+        start = time.time()
+
+        gscv = GridSearchCV(self._model, self._params, cv=3)
+        gscv.fit(training_features, training_labels.values.ravel())
+        self._model = gscv.best_estimator_
+
+        end = time.time()
+        print('\n---> {0}: Found Parameters in {1:.2f} seconds '.format(name, end - start))
+        print("Parameters = ", gscv.best_params_)
+        return self
