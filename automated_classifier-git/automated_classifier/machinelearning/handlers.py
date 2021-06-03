@@ -45,8 +45,8 @@ class ModelHandler:
             for res in results:
                 self.insert_model(res.result())
 
-        """
 
+        """
         # Step 1: Init multiprocessing.Pool()
         pool = mp.Pool(mp.cpu_count() - 1)
 
@@ -60,6 +60,7 @@ class ModelHandler:
         pool.close()
         pool.join()
         """
+        
 class AccuracyHandler:
     def __init__(self, test_features: DataFrame, test_labels: DataFrame):
         self.scoring = ["accuracy", "balanced_accuracy", "f1_weighted"]  # Type of accuracies we want

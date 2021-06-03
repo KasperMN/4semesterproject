@@ -1,10 +1,9 @@
 import pandas as pd
 import requests
-
 from automated_classifier.app import TrainerApp
 from automated_classifier.app import PredictApp
 from flask import Flask
-from flask_restful import Api, Resource
+from flask_restful import Api
 from flask import request
 from automated_classifier.common import extractors
 import warnings

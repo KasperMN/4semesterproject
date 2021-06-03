@@ -1,11 +1,8 @@
 from __future__ import division
 import os
 import time
-
-import numpy as np
 import pandas as pd
 from pandas import DataFrame
-
 from automated_classifier import data as dt
 from automated_classifier import machinelearning as ml
 import joblib
