@@ -23,16 +23,12 @@ class ModelHandler:
         return self._fitted_models
 
     def create_models(self):
-        #self._org_models["KNeighbors"] = classifiers.KNeighbors("KNeighbors")
-        #self._org_models["GradientBoost"] = classifiers.GradientBoost("GradientBoost")
-        #self._org_models["RandomForest"] = classifiers.RandomForest("RandomForest")
-        #self._org_models["SupportVector"] = classifiers.SupportVector("SupportVector")
-        self._org_models["NeuralNetwork"] = classifiers.NeuralNetwork("NeuralNetwork")
-        #self._org_models["KNeighbors_Smote"] = classifiers.KNeighbors("KNeighbors_Smote")
-        #self._org_models["GradientBoost_Smote"] = classifiers.GradientBoost("GradientBoost_Smote")
-        #self._org_models["RandomForest_Smote"] = classifiers.RandomForest("RandomForest_Smote")
-        #self._org_models["SupportVector_Smote"] = classifiers.SupportVector("SupportVector_Smote")
-        #self._org_models["NeuralNetwork_Smote"] = classifiers.NeuralNetwork("NeuralNetwork_Smote")
+        self._org_models["KNeighbors"] = classifiers.KNeighbors("KNeighbors")
+        self._org_models["GradientBoost"] = classifiers.GradientBoost("GradientBoost")
+        self._org_models["RandomForest"] = classifiers.RandomForest("RandomForest")
+        self._org_models["KNeighbors_Smote"] = classifiers.KNeighbors("KNeighbors_Smote")
+        self._org_models["GradientBoost_Smote"] = classifiers.GradientBoost("GradientBoost_Smote")
+        self._org_models["RandomForest_Smote"] = classifiers.RandomForest("RandomForest_Smote")
 
     def insert_model(self, result):
         self._fitted_models[result.name] = result.model
@@ -62,9 +58,9 @@ class ModelHandler:
                     self._data["training_features"], self._data["training_labels"], name), callback=self.insert_model)
 
         pool.close()
-        pool.join() """
-
-
+        pool.join()
+        """
+        
 class AccuracyHandler:
     def __init__(self, test_features: DataFrame, test_labels: DataFrame):
         self.scoring = ["accuracy", "balanced_accuracy", "f1_weighted"]  # Type of accuracies we want
