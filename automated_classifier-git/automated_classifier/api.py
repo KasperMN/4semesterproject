@@ -1,13 +1,15 @@
+import pandas as pd
 import requests
 
-from automated_classifier import app
+from automated_classifier.app import TrainerApp
+from automated_classifier.app import PredictApp
 from flask import Flask
 from flask_restful import Api, Resource
 from flask import request
 from automated_classifier.common import extractors
 import warnings
-warnings.filterwarnings("ignore")
 
+warnings.filterwarnings("ignore")
 
 _flask_application = Flask(__name__)
 api = Api(_flask_application)
@@ -27,7 +29,6 @@ def get_keys(url):
             if key not in keys_list:
                 keys_list.append(key)
 
-
     except Exception:
         return Exception, 400
     return {"Column Names": keys_list}
@@ -35,20 +36,21 @@ def get_keys(url):
 
 @_flask_application.route('/data', methods=['POST'])
 def returns_model():
-    api_link = request.json["url"]
-    chosen_columns = request.json["keys"]
-    chosen_target = request.json["target"]
-    chosen_table_name = request.json["table_name"]
+    app = TrainerApp(request.json["url"], request.json["keys"], request.json["target"], request.json["table_name"])
+    return app.return_best_model()
 
-    return app.find_best_classifier(
-        link=api_link, columns=chosen_columns,
-        target=chosen_target, table_name=chosen_table_name
-    )
 
-"""@_flask_application.route('data/prediction', methods=['POST'])
+@_flask_application.route('/predict', methods=['POST'])
 def predict_on_data():
-    pass"""
+    print(request.json["params"])
+    df = pd.DataFrame(request.json["params"], index=[0])
+
+    app = PredictApp()
+    return app.predict_classification(df), 200
 
 
-
-
+@_flask_application.route('/test/predict/dataset', methods=['POST'])
+def predict_on_dataset():
+    app = PredictApp()
+    app.test_predict_dataset()
+    return "ok", 200

@@ -1,6 +1,7 @@
 from __future__ import division
 import sys
-
+from pickle import dump
+import hickle as hkl
 import pandas as pd
 from imblearn.over_sampling import SMOTE
 from pandas import DataFrame
@@ -20,27 +21,13 @@ class PreProcessing:
         self._processed_data = {}
 
     def create_processed_data(self, target: str):
-        print('Shape of Data: {}'.format(self._data.shape[0]))  # Prints num rows
+        print('---> Number of rows in dataset: {}'.format(self._data.shape[0]))  # Prints num rows
 
         ''' @@ Remove Duplicates From Data '''
         self._data.drop_duplicates(inplace=True)  # Drops duplicate rows
-        print('Shape of Data after dropping duplicates: {}'.format(self._data.shape[0]))  # Prints num rows
+        print('---> Number after removing duplicates: {}'.format(self._data.shape[0]))  # Prints num rows
 
-        hej = self._data[target].value_counts()
-        count = self._data[target].count()
-        unique = self._data[target].nunique()
-
-        rows_to_drop = []
-        print(self._data[target].value_counts().to_dict())
-
-        for key, value in self._data[target].value_counts().to_dict().items():
-            min_values = count / 100
-            if value < min_values:
-                rows_to_drop.append(key)
-
-        print("rows to drop: {}".format(rows_to_drop))
-        self._data = self._data[self._data[target].isin(rows_to_drop) == False]
-        print(self._data[target].value_counts().to_dict())
+        print('---> Target variants: {}'.format(self._data[target].value_counts().to_dict().keys()))
 
         ''' @@ Specify target and features '''
         target_column = self._data[target]  # Separates Assembly Code from features
@@ -48,7 +35,7 @@ class PreProcessing:
 
         ''' @@ Split data into training and test '''
         training_features, test_features, training_labels, test_labels = train_test_split(
-            features, target_column, test_size=0.2, random_state=1, shuffle=True, stratify=target_column)
+            features, target_column, test_size=0.1, random_state=1, shuffle=True, stratify=target_column)
 
         ''' @@ Get Category columns and Numerical columns '''
         categorical_cols = self.get_categorical_columns(features)  # Names of string columns
@@ -81,6 +68,7 @@ class PreProcessing:
         self._processed_data["test_features"] = test_features
         self._processed_data["test_labels"] = test_labels
 
+
     @property
     def processed_data(self):
         return self._processed_data
@@ -89,12 +77,13 @@ class PreProcessing:
     def print_data(cls, training_features: DataFrame, test_features: DataFrame,
                    training_labels: DataFrame, test_labels: DataFrame,
                    training_features_smote: DataFrame, training_labels_smote: DataFrame):
-        print("\nTraining Features: {0}"  # Display number of rows
-              "\nTest Features: {1}"
-              "\nTraining Labels: {2}"
-              "\nTest Labels: {3}"
-              "\nTraining Features Smote: {4}"
-              "\nTraining Labels Smote: {5}".format(
+        print("\n@ Number of rows in each data set")
+        print("---> Training Features: {0}"  # Display number of rows
+              "\n---> Test Features: {1}"
+              "\n---> Training Labels: {2}"
+              "\n---> Test Labels: {3}"
+              "\n---> Training Features Smote: {4}"
+              "\n---> Training Labels Smote: {5}".format(
             len(training_features), len(test_features),
             len(training_labels), len(test_labels),
             len(training_features_smote), len(training_labels_smote)))
@@ -102,8 +91,7 @@ class PreProcessing:
     @classmethod
     def get_categorical_columns(cls, features):
         return [cname for cname in features.columns  # Select categorical columns
-                if features[cname].dtype == "object"  # IF the type is of object (string)
-                and features[cname].nunique() < 10]  # And has less than 10 unique features
+                if features[cname].dtype == "object"]  # IF the type is of object (string)
 
     @classmethod
     def get_numerical_columns(cls, features):
@@ -126,6 +114,9 @@ class PreProcessing:
         training_features.loc[:, numerical_cols] = qt.fit_transform(training_features.loc[:, numerical_cols])
         test_features.loc[:, numerical_cols] = qt.transform(test_features.loc[:, numerical_cols])
 
+        hkl.dump(le, 'program/le.hkl', mode='w')
+        hkl.dump(qt, 'program/qt.hkl', mode='w')
+
         ''' @ Keep selected columns '''
         my_cols = categorical_cols + numerical_cols
         training_features = training_features[my_cols].copy()
@@ -138,7 +129,8 @@ class PreProcessing:
         enc = LabelEncoder()  # Label Encoder
         training_labels = enc.fit_transform(training_labels)
         test_labels = enc.transform(test_labels)
-        # self.mapped_labels = dict(zip(enc.transform(enc.classes_), enc.classes_))
+        mapped_labels = dict(zip(enc.transform(enc.classes_), enc.classes_))
+        hkl.dump(mapped_labels, 'program/assemblycodes.hkl', 'w')
         ''' @@ Numpy Array to DataFrame '''
         training_labels = pd.DataFrame(data=training_labels, columns=[target], index=None)
         test_labels = pd.DataFrame(data=test_labels, columns=[target], index=None)
