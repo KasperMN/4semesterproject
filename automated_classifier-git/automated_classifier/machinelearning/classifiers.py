@@ -85,7 +85,6 @@ class RandomForest:
                                    max_depth=[10, 20, 40, 50, 100],
                                    class_weight=["balanced", "balanced_subsample"],
                                    max_features=["auto", "sqrt", "log2"],
-                                   warm_start=[True, False],
                                    criterion=['gini', 'entropy'])
         self._model = RandomForestClassifier()
         self._name = name
