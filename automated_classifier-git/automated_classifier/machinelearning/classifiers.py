@@ -152,12 +152,9 @@ class SupportVector:
 
 class NeuralNetwork:
     def __init__(self, name):
-        self._params = defaultdict(hidden_layer_sizes=[150, 200, 300, 400],
-                                   learning_rate_init=[0.001, 0.002, 0.003],
-                                   max_iter=[800])
-        # n_iter_no_change=[5, 10, 15, 20]
-        # max_iter=[100, 200, 300]
-        # learning_rate=["constant", "invscaling", "adaptive"]
+        self._params = defaultdict(hidden_layer_sizes=[150, 300],
+                                   learning_rate_init=[0.001, 0.002],
+                                   max_iter=[800, 2000])
         self._model = MLPClassifier()
         self._name = name
 
