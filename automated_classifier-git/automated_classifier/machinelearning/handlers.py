@@ -36,7 +36,7 @@ class ModelHandler:
         self._fitted_models[result.name] = result.model
 
     def fit_models(self):
-
+        """
         with concurrent.futures.ProcessPoolExecutor() as executor:
             results = []
             for key, classifier in self._org_models.items():
@@ -47,10 +47,10 @@ class ModelHandler:
             for res in results:
                 self.insert_model(res.result())
 
-
         """
+
         # Step 1: Init multiprocessing.Pool()
-        pool = mp.Pool(mp.cpu_count() - 1)
+        pool = mp.Pool(mp.cpu_count())
 
         # Step 2: pool.apply
         for key, classifier in self._org_models.items():
@@ -61,7 +61,7 @@ class ModelHandler:
 
         pool.close()
         pool.join()
-        """
+
         
 class AccuracyHandler:
     def __init__(self, test_features: DataFrame, test_labels: DataFrame):
