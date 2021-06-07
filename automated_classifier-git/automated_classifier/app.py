@@ -193,7 +193,7 @@ if __name__ == '__main__':
     import pandas as pd
     app = TrainerApp("", ["Area","Base Constraint","Length","Structural Usage","Unconnected Height","Volume","Assembly Code","Width"],
                      'Assembly Code', 'table')
-    app._selected_data = pd.read_csv('data/combineddata.csv')
+    app._selected_data = pd.read_csv('data/CombinedData2.csv')
 
     app.insert_data_to_sqllite()
     app.process_data_from_db()
